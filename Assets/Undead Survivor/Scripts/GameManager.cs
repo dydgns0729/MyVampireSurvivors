@@ -7,6 +7,7 @@ namespace MyVampireSurvivors
         #region Variables
         public static GameManager instance;
         public Player player;
+        public PoolManager poolManager;
         #endregion
 
         private void Awake()

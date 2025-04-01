@@ -5,8 +5,13 @@ namespace MyVampireSurvivors
     public class Reposition : MonoBehaviour
     {
         #region Variables
-        // 현재 변수는 없으므로 공간만 남겨둡니다. 필요한 경우 추가할 수 있습니다.
+        Collider2D coll;
         #endregion
+
+        private void Awake()
+        {
+            coll = GetComponent<Collider2D>();
+        }
 
         // 2D 콜라이더가 영역을 벗어날 때 호출되는 메서드
         private void OnTriggerExit2D(Collider2D collision)
@@ -57,7 +62,10 @@ namespace MyVampireSurvivors
 
                 // "Enemy" 태그를 가진 오브젝트에 대한 처리 (현재는 빈 케이스)
                 case "Enemy":
-                    // Enemy 관련 로직을 추가할 수 있습니다.
+                    if (coll.enabled)
+                    {
+                        transform.Translate(playerDir * 25 + new Vector3(Random.Range(-3f, 3f), Random.Range(-3f, 3f), 0));
+                    }
                     break;
             }
         }
