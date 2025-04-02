@@ -7,15 +7,27 @@ namespace MyVampireSurvivors
         #region Variables
         // 적의 이동 속도
         public float speed;
+
+        // 애니메이션 컨트롤러 배열 (적의 스프라이트 타입에 따라 다르게 설정)
+        public RuntimeAnimatorController[] animatorControllers;
+
+        // 적의 체력과 최대 체력
+        public float health;
+        public float maxHealth;
+
         // 적이 추적할 타겟 (플레이어)
         public Rigidbody2D target;
 
         // 적이 살아있는지 여부를 나타내는 변수
         bool isLive;
 
-        // Rigidbody2D 컴포넌트 (물리 계산을 위한 컴포넌트)
+        // 물리적 이동을 위한 Rigidbody2D 컴포넌트
         Rigidbody2D rb2d;
-        // SpriteRenderer 컴포넌트 (스프라이트 렌더링을 위한 컴포넌트)
+
+        // 애니메이션을 위한 Animator 컴포넌트
+        Animator animator;
+
+        // 스프라이트 렌더링을 위한 SpriteRenderer 컴포넌트
         SpriteRenderer spriter;
         #endregion
 
@@ -26,6 +38,8 @@ namespace MyVampireSurvivors
             rb2d = GetComponent<Rigidbody2D>();
             // SpriteRenderer 컴포넌트를 가져옴
             spriter = GetComponent<SpriteRenderer>();
+            // Animator 컴포넌트를 가져옴
+            animator = GetComponent<Animator>();
         }
 
         // 물리적 업데이트: 매 FixedUpdate() 호출 시 적의 이동을 처리
@@ -60,12 +74,27 @@ namespace MyVampireSurvivors
             spriter.flipX = target.position.x < rb2d.position.x;
         }
 
+        // 적이 활성화될 때 호출되는 메서드
         private void OnEnable()
         {
             // 적이 활성화될 때 살아있는 상태로 초기화
             isLive = true;
             // 적의 타겟을 플레이어로 설정
             target = GameManager.instance.player.GetComponent<Rigidbody2D>();
+
+            // 적의 체력을 최대 체력으로 설정
+            health = maxHealth;
+        }
+
+        // 적 초기화 메서드: SpawnData에 따라 적의 상태 초기화
+        public void Init(SpawnData spawnData)
+        {
+            // 애니메이션 컨트롤러를 스폰 데이터에 맞게 설정
+            animator.runtimeAnimatorController = animatorControllers[spawnData.spriteType];
+            // 이동 속도와 체력을 스폰 데이터에 맞게 설정
+            speed = spawnData.speed;
+            maxHealth = spawnData.health;
+            health = spawnData.health;
         }
     }
 }

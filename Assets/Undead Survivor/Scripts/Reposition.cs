@@ -5,11 +5,14 @@ namespace MyVampireSurvivors
     public class Reposition : MonoBehaviour
     {
         #region Variables
+        // 2D Collider 변수 (충돌 처리용)
         Collider2D coll;
         #endregion
 
+        // Awake()는 객체가 초기화될 때 호출되는 메서드
         private void Awake()
         {
+            // 해당 오브젝트의 2D Collider를 가져옴
             coll = GetComponent<Collider2D>();
         }
 
@@ -44,7 +47,7 @@ namespace MyVampireSurvivors
                     // X와 Y의 차이가 비슷한 경우 (대각선 방향으로 이동)
                     if (Mathf.Abs(diffX - diffY) <= 0.1f)
                     {
-                        // 대각선 이동
+                        // 대각선 이동 (Y축과 X축으로 각각 이동)
                         transform.Translate(Vector3.up * dirY * 40); // Y축으로 이동
                         transform.Translate(Vector3.right * dirX * 40); // X축으로 이동
                     }
@@ -60,10 +63,12 @@ namespace MyVampireSurvivors
                     }
                     break;
 
-                // "Enemy" 태그를 가진 오브젝트에 대한 처리 (현재는 빈 케이스)
+                // "Enemy" 태그를 가진 오브젝트에 대한 처리
                 case "Enemy":
+                    // Collider가 활성화된 경우
                     if (coll.enabled)
                     {
+                        // 플레이어 방향에 따른 이동 (약간의 랜덤한 이동 추가)
                         transform.Translate(playerDir * 25 + new Vector3(Random.Range(-3f, 3f), Random.Range(-3f, 3f), 0));
                     }
                     break;
