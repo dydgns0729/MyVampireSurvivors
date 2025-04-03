@@ -13,6 +13,8 @@ namespace MyVampireSurvivors
 
         public Scanner scanner;
 
+        public Hand[] hands;
+
         // 물리적 처리를 위한 Rigidbody2D 컴포넌트
         Rigidbody2D rb2d;
 
@@ -34,6 +36,9 @@ namespace MyVampireSurvivors
             animator = GetComponent<Animator>();
 
             scanner = GetComponent<Scanner>();
+
+            //비활성화된 컴포넌트들 가져오기 (true)
+            hands = GetComponentsInChildren<Hand>(true);
         }
 
         // 물리적 업데이트 함수 (매 프레임 고정된 시간 간격으로 호출)

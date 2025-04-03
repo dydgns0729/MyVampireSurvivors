@@ -8,12 +8,16 @@ namespace MyVampireSurvivors
         #region Variables
         // 무기의 고유 ID (무기의 종류나 특징을 구분할 때 사용)
         public int id;
+
         // 무기 프리팹 ID (풀에서 가져올 프리팹을 구분하는 ID)
         public int prefabId;
+
         // 무기의 피해량 (각 발사체가 적에게 입히는 피해)
         public float damage;
+
         // 발사되는 총알의 수 (한 번에 발사되는 총알의 수)
         public int count;
+
         // 무기의 회전 속도 (회전하는 무기의 속도)
         public float speed;
 
@@ -44,6 +48,8 @@ namespace MyVampireSurvivors
                 default:
                     // id가 0이 아닐 경우, 타이머를 증가시켜 일정 시간이 지나면 발사
                     timer += Time.deltaTime;
+
+                    // 발사 간격이 끝났을 때 발사
                     if (timer > speed)
                     {
                         timer = 0; // 타이머 리셋
@@ -55,7 +61,8 @@ namespace MyVampireSurvivors
             // V 키를 눌렀을 때 레벨업 처리
             if (Input.GetKeyDown(KeyCode.V))
             {
-                LevelUp(10, 1); // 레벨업: 피해량 10 증가, 총알 수 1 증가
+                // 레벨업: 피해량 10 증가, 총알 수 1 증가
+                LevelUp(10, 1);
             }
         }
 
@@ -71,33 +78,46 @@ namespace MyVampireSurvivors
             if (id == 0)
                 Batch();
 
+            // "ApplyGear" 메시지를 플레이어에게 전달하여 무기 장착을 반영하도록 함
             player.BroadcastMessage("ApplyGear", SendMessageOptions.DontRequireReceiver);
         }
 
         // 무기 초기화 함수 (무기 id에 따라 초기 설정)
         public void Init(ItemData data)
         {
+            // 무기의 이름을 아이템 ID에 따라 설정
             name = "Weapon " + data.itemId;
+
+            // 무기의 부모를 플레이어로 설정하여, 무기가 플레이어와 함께 이동하도록 설정
             transform.parent = player.transform;
+
+            // 무기의 초기 위치를 플레이어의 위치와 동일하게 설정
             transform.localPosition = Vector3.zero;
 
+            // 아이템 데이터에서 가져온 itemId를 이용해 무기의 고유 ID 설정
             id = data.itemId;
+
+            // 아이템의 기본 피해량을 설정
             damage = data.baseDamage;
+
+            // 아이템의 기본 총알 수를 설정
             count = data.baseCount;
 
+            // 풀에서 해당 아이템에 맞는 발사체 프리팹을 찾아 그 ID를 설정
             for (int i = 0; i < GameManager.instance.poolManager.prefabs.Length; i++)
             {
                 if (data.projectile == GameManager.instance.poolManager.prefabs[i])
                 {
-                    prefabId = i;
-                    break;
+                    prefabId = i; // 해당 프리팹의 ID 설정
+                    break; // 찾으면 반복문 종료
                 }
             }
 
-            // 무기 id에 따라 설정을 다르게 함
+            // 무기 id에 따라 설정을 다르게 처리
             switch (id)
             {
                 case 0:
+                    // id가 0인 경우, 총알을 원형으로 배치
                     speed = 150f;
                     Batch(); // id가 0일 때, 원형으로 총알 배치
                     break;
@@ -108,6 +128,14 @@ namespace MyVampireSurvivors
                     break;
             }
 
+            #region HandSet
+            // 아이템 데이터에서 손에 해당하는 스프라이트를 가져와서 설정
+            Hand hand = player.hands[(int)data.itemType];
+            hand.spriter.sprite = data.hand; // 손에 스프라이트 설정
+            hand.gameObject.SetActive(true); // 손 오브젝트를 활성화
+            #endregion
+
+            // "ApplyGear" 메시지를 플레이어에게 전달하여 무기를 장착하도록 함
             player.BroadcastMessage("ApplyGear", SendMessageOptions.DontRequireReceiver);
         }
 
