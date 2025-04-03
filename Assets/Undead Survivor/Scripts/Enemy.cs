@@ -1,3 +1,5 @@
+using System;
+using System.Collections;
 using UnityEngine;
 
 namespace MyVampireSurvivors
@@ -24,29 +26,36 @@ namespace MyVampireSurvivors
         // 물리적 이동을 위한 Rigidbody2D 컴포넌트
         Rigidbody2D rb2d;
 
+        Collider2D collider2d;
+
         // 애니메이션을 위한 Animator 컴포넌트
         Animator animator;
 
         // 스프라이트 렌더링을 위한 SpriteRenderer 컴포넌트
         SpriteRenderer spriter;
+
+        WaitForFixedUpdate wait;
         #endregion
 
         // 초기화 작업: 컴포넌트들을 가져오기
         private void Awake()
         {
-            // Rigidbody2D 컴포넌트를 가져옴
+            // Rigidbody2D 컴포넌트를 가져옴 (적의 물리적 이동을 담당)
             rb2d = GetComponent<Rigidbody2D>();
-            // SpriteRenderer 컴포넌트를 가져옴
+            collider2d = GetComponent<Collider2D>();
+            // SpriteRenderer 컴포넌트를 가져옴 (적의 스프라이트 렌더링을 담당)
             spriter = GetComponent<SpriteRenderer>();
-            // Animator 컴포넌트를 가져옴
+            // Animator 컴포넌트를 가져옴 (애니메이션 제어를 담당)
             animator = GetComponent<Animator>();
+
+            wait = new WaitForFixedUpdate();
         }
 
         // 물리적 업데이트: 매 FixedUpdate() 호출 시 적의 이동을 처리
         private void FixedUpdate()
         {
             // 적이 살아있지 않으면 이동을 처리하지 않음
-            if (!isLive)
+            if (!isLive || animator.GetCurrentAnimatorStateInfo(0).IsName("Hit"))
                 return;
 
             // 타겟(플레이어)와 적 간의 방향 벡터 계산
@@ -77,13 +86,18 @@ namespace MyVampireSurvivors
         // 적이 활성화될 때 호출되는 메서드
         private void OnEnable()
         {
-            // 적이 활성화될 때 살아있는 상태로 초기화
-            isLive = true;
             // 적의 타겟을 플레이어로 설정
             target = GameManager.instance.player.GetComponent<Rigidbody2D>();
 
             // 적의 체력을 최대 체력으로 설정
             health = maxHealth;
+
+            // 적이 활성화될 때 살아있는 상태로 초기화
+            isLive = true;
+            collider2d.enabled = true;
+            rb2d.simulated = true;
+            spriter.sortingOrder = 2;
+            animator.SetBool("Dead", false);
         }
 
         // 적 초기화 메서드: SpawnData에 따라 적의 상태 초기화
@@ -95,6 +109,55 @@ namespace MyVampireSurvivors
             speed = spawnData.speed;
             maxHealth = spawnData.health;
             health = spawnData.health;
+        }
+
+        // 충돌 처리: 총알과 충돌 시 처리
+        public void OnTriggerEnter2D(Collider2D collision)
+        {
+            // 충돌한 오브젝트가 "Bullet" 태그를 가지지 않으면 처리하지 않음
+            if (!collision.CompareTag("Bullet") || !isLive)
+                return;
+
+            // 총알의 피해를 받아 체력 감소
+            health -= collision.GetComponent<Bullet>().damage;
+
+            StartCoroutine(KnockBack());
+
+            // 체력이 0 이하가 되면 죽음 처리
+            if (health <= 0)
+            {
+                // 죽음 상태로 전환
+                isLive = false;
+                collider2d.enabled = false;
+                rb2d.simulated = false;
+                spriter.sortingOrder = 1;
+                animator.SetBool("Dead", true);
+                GameManager.instance.kill++;
+                GameManager.instance.GetExp();
+            }
+            else
+            {
+                animator.SetTrigger("Hit");
+            }
+        }
+
+        IEnumerator KnockBack()
+        {
+            //다음 물리 프레임까지 딜레이
+            yield return wait;
+
+            Vector3 playerPos = GameManager.instance.player.transform.position;
+            Vector3 dirVec = transform.position - playerPos;
+            rb2d.AddForce(dirVec.normalized * 3, ForceMode2D.Impulse);
+
+        }
+
+        // 적이 죽었을 때 호출되는 함수
+        private void Dead()
+        {
+            // 적의 게임 오브젝트를 비활성화
+            gameObject.SetActive(false);
+
         }
     }
 }

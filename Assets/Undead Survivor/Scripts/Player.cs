@@ -11,6 +11,8 @@ namespace MyVampireSurvivors
         // 플레이어의 이동 속도
         public float speed;
 
+        public Scanner scanner;
+
         // 물리적 처리를 위한 Rigidbody2D 컴포넌트
         Rigidbody2D rb2d;
 
@@ -30,6 +32,8 @@ namespace MyVampireSurvivors
             spriteRenderer = GetComponent<SpriteRenderer>();
             // Animator 컴포넌트를 가져옴
             animator = GetComponent<Animator>();
+
+            scanner = GetComponent<Scanner>();
         }
 
         // 물리적 업데이트 함수 (매 프레임 고정된 시간 간격으로 호출)
