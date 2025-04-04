@@ -38,6 +38,8 @@ namespace MyVampireSurvivors
         // 매 프레임마다 호출되는 업데이트 함수
         private void Update()
         {
+            if (!GameManager.instance.isLive) return;
+
             // 무기의 id에 따라 회전 처리
             switch (id)
             {

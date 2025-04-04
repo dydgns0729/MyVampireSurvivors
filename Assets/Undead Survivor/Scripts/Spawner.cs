@@ -27,6 +27,8 @@ namespace MyVampireSurvivors
 
         private void Update()
         {
+            if (!GameManager.instance.isLive) return;
+
             // 타이머를 deltaTime 만큼 증가시켜줌 (프레임당 시간 간격)
             timer += Time.deltaTime;
             // 레벨은 게임 시간을 10으로 나눈 몫을 내림한 값

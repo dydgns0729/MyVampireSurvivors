@@ -24,6 +24,8 @@ namespace MyVampireSurvivors
 
         // 아이템 레벨을 표시할 텍스트 컴포넌트
         TextMeshProUGUI textLevel;
+        TextMeshProUGUI textName;
+        TextMeshProUGUI textDesc;
         #endregion
 
         // 초기화 작업: 아이템 아이콘과 레벨 텍스트 초기화
@@ -38,13 +40,34 @@ namespace MyVampireSurvivors
             TextMeshProUGUI[] texts = GetComponentsInChildren<TextMeshProUGUI>();
             // 첫 번째 텍스트 컴포넌트를 레벨 텍스트로 설정
             textLevel = texts[0];
+            textName = texts[1];
+            textDesc = texts[2];
+            textName.text = data.itemName;
         }
 
-        // 매 프레임 후 호출되는 함수: 레벨 텍스트 업데이트
-        private void LateUpdate()
+        private void OnEnable()
         {
             // 현재 레벨을 "Lv.1", "Lv.2" 등 형식으로 텍스트로 표시
             textLevel.text = $"Lv.{(level + 1)}";
+            // 아이템의 종류에 따라 처리 로직을 다르게 실행
+            switch (data.itemType)
+            {
+                // 근접 무기나 원거리 무기일 경우
+                case ItemData.ItemType.Melee:
+                case ItemData.ItemType.Range:
+                    // 
+                    textDesc.text = string.Format(data.itemDesc, data.damages[level] * 100, data.counts[level]);
+                    break;
+                case ItemData.ItemType.Glove:
+                case ItemData.ItemType.Shoe:
+                    // 장비 아이템의 설명을 설정
+                    textDesc.text = string.Format(data.itemDesc, data.damages[level] * 100);
+                    break;
+                default:
+                    textDesc.text = string.Format(data.itemDesc);
+                    break;
+            }
+
         }
 
         // 아이템 클릭 시 실행되는 함수 (아이템 사용/레벨업 처리)

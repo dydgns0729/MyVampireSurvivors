@@ -24,6 +24,7 @@ namespace MyVampireSurvivors
         // 아이템의 이름
         public string itemName;
         // 아이템의 설명 (아이템의 효과나 사용법에 대한 간략한 설명)
+        [TextArea]
         public string itemDesc;
         // 아이템 아이콘 (UI에 표시될 아이템의 아이콘 이미지)
         public Sprite itemIcon;

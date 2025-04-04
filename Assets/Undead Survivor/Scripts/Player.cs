@@ -44,6 +44,7 @@ namespace MyVampireSurvivors
         // 물리적 업데이트 함수 (매 프레임 고정된 시간 간격으로 호출)
         private void FixedUpdate()
         {
+            if (!GameManager.instance.isLive) return;
             // 입력된 방향 벡터에 속도를 곱하여 다음 이동할 벡터 계산
             Vector2 nextVec = inputVec * speed * Time.fixedDeltaTime;
 
@@ -54,6 +55,7 @@ namespace MyVampireSurvivors
         // 입력 시스템에서 입력값을 받을 때 호출되는 함수
         void OnMove(InputValue value)
         {
+            if (!GameManager.instance.isLive) return;
             // 입력된 벡터 값을 inputVec에 저장
             inputVec = value.Get<Vector2>();
         }
@@ -61,6 +63,7 @@ namespace MyVampireSurvivors
         // 프레임 후 업데이트 함수 (애니메이션과 스프라이트 회전 등)
         private void LateUpdate()
         {
+            if (!GameManager.instance.isLive) return;
             // 애니메이터에 "Speed" 파라미터를 설정하여 애니메이션 전환
             animator.SetFloat("Speed", inputVec.magnitude);
 
@@ -68,6 +71,23 @@ namespace MyVampireSurvivors
             if (inputVec.x != 0)
             {
                 spriteRenderer.flipX = inputVec.x < 0;
+            }
+        }
+
+        private void OnCollisionStay2D(Collision2D collision)
+        {
+            if (!GameManager.instance.isLive) return;
+
+            GameManager.instance.health -= Time.deltaTime * 10f;
+
+            if (GameManager.instance.health <= 0)
+            {
+                for (int i = 2; i < transform.childCount; i++)
+                {
+                    transform.GetChild(i).gameObject.SetActive(false);
+                }
+                animator.SetTrigger("Dead");
+                GameManager.instance.GameOver();
             }
         }
     }

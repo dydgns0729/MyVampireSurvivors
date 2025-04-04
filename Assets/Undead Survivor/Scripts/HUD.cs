@@ -40,6 +40,7 @@ namespace MyVampireSurvivors
         // 매 프레임 후 호출되는 함수 (UI를 업데이트하는 역할)
         private void LateUpdate()
         {
+            if (!GameManager.instance.isLive) return;
             // type 값에 따라 해당 정보를 업데이트
             switch (type)
             {
@@ -49,7 +50,7 @@ namespace MyVampireSurvivors
                     float curExp = GameManager.instance.exp;
 
                     // 다음 레벨까지 필요한 경험치 (GameManager에서 가져옴)
-                    float maxExp = GameManager.instance.nextExp[GameManager.instance.level];
+                    float maxExp = GameManager.instance.nextExp[Mathf.Min(GameManager.instance.level, GameManager.instance.nextExp.Length - 1)];
 
                     // 경험치를 비율로 계산하여 슬라이더 값에 반영
                     mySlider.value = curExp / maxExp;

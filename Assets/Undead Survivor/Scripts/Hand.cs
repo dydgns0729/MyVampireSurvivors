@@ -33,6 +33,7 @@ namespace MyVampireSurvivors
         // 매 프레임 후 호출되는 함수 (손의 위치와 방향을 업데이트)
         private void LateUpdate()
         {
+            if (!GameManager.instance.isLive) return;
             // 플레이어가 반전된 방향인지 확인 (플레이어의 `flipX` 값에 따라 손의 방향을 반전)
             bool isReverse = player.flipX;
 

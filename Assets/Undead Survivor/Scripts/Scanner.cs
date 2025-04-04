@@ -21,6 +21,7 @@ namespace MyVampireSurvivors
         // 매 프레임마다 물리적 계산을 통해 탐지
         private void FixedUpdate()
         {
+            if (!GameManager.instance.isLive) return;
             // Physics2D.CircleCastAll을 사용하여 범위 내의 모든 타겟을 탐지
             // 탐지된 타겟을 targets 배열에 저장
             targets = Physics2D.CircleCastAll(transform.position, scanRange, Vector2.zero, 0, targetLayer);

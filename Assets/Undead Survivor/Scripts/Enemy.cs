@@ -54,6 +54,7 @@ namespace MyVampireSurvivors
         // 물리적 업데이트: 매 FixedUpdate() 호출 시 적의 이동을 처리
         private void FixedUpdate()
         {
+            if (!GameManager.instance.isLive) return;
             // 적이 살아있지 않으면 이동을 처리하지 않음
             if (!isLive || animator.GetCurrentAnimatorStateInfo(0).IsName("Hit"))
                 return;
@@ -75,7 +76,7 @@ namespace MyVampireSurvivors
         private void LateUpdate()
         {
             // 적이 살아있지 않으면 방향 전환을 처리하지 않음
-            if (!isLive)
+            if (!isLive || !GameManager.instance.isLive)
                 return;
 
             // 타겟(플레이어)의 X 좌표가 적의 X 좌표보다 작으면 스프라이트를 뒤집음
