@@ -15,6 +15,8 @@ namespace MyVampireSurvivors
 
         public Hand[] hands;
 
+        public RuntimeAnimatorController[] animCon;
+
         // 물리적 처리를 위한 Rigidbody2D 컴포넌트
         Rigidbody2D rb2d;
 
@@ -39,6 +41,12 @@ namespace MyVampireSurvivors
 
             //비활성화된 컴포넌트들 가져오기 (true)
             hands = GetComponentsInChildren<Hand>(true);
+        }
+
+        private void OnEnable()
+        {
+            speed *= Character.Speed; // 플레이어의 속도를 설정
+            animator.runtimeAnimatorController = animCon[GameManager.instance.playerId];
         }
 
         // 물리적 업데이트 함수 (매 프레임 고정된 시간 간격으로 호출)

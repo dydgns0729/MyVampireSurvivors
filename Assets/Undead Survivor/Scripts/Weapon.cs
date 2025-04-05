@@ -72,7 +72,7 @@ namespace MyVampireSurvivors
         public void LevelUp(float damage, int count)
         {
             // 레벨업에 따라 무기의 피해량을 업데이트
-            this.damage = damage;
+            this.damage = damage * Character.Damage;
             // 발사되는 총알의 수를 증가시킴
             this.count += count;
 
@@ -100,10 +100,10 @@ namespace MyVampireSurvivors
             id = data.itemId;
 
             // 아이템의 기본 피해량을 설정
-            damage = data.baseDamage;
+            damage = data.baseDamage * Character.Damage;
 
             // 아이템의 기본 총알 수를 설정
-            count = data.baseCount;
+            count = data.baseCount + Character.Count;
 
             // 풀에서 해당 아이템에 맞는 발사체 프리팹을 찾아 그 ID를 설정
             for (int i = 0; i < GameManager.instance.poolManager.prefabs.Length; i++)
@@ -120,12 +120,11 @@ namespace MyVampireSurvivors
             {
                 case 0:
                     // id가 0인 경우, 총알을 원형으로 배치
-                    speed = 150f;
+                    speed = 150f * Character.WeaponSpeed;
                     Batch(); // id가 0일 때, 원형으로 총알 배치
                     break;
                 default:
-                    // 예상치 못한 id가 들어오면 기본 값 설정
-                    speed = 0.3f;
+                    speed = 0.5f * Character.WeaponRate;
                     Debug.Log("Weapon.cs Init() default"); // 디버그 로그 출력
                     break;
             }

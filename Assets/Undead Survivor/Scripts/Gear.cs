@@ -70,10 +70,12 @@ namespace MyVampireSurvivors
                 {
                     // 무기의 id가 0일 경우, 속도를 150에 비례하여 증가
                     case 0:
+                        float speed = 150 * Character.WeaponSpeed;
                         weapon.speed = 150 + (150 * rate);
                         break;
                     // 그 외의 무기들은 기본 속도의 비율을 rate에 맞춰 변경
                     default:
+                        speed = 0.5f * Character.WeaponRate;
                         weapon.speed = 0.5f * (1f - rate);
                         break;
                 }
@@ -84,7 +86,7 @@ namespace MyVampireSurvivors
         void SpeedUp()
         {
             // 기본 속도 설정
-            float speed = 3;
+            float speed = 5 * Character.Speed;
 
             // 플레이어의 이동 속도를 신발의 효과 비율에 맞춰 증가
             GameManager.instance.player.speed = speed + speed * rate;

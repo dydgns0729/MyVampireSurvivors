@@ -19,6 +19,7 @@ namespace MyVampireSurvivors
         public float maxGameTime = 2 * 10f;
 
         [Header("# Player Info")]
+        public int playerId;
         public int level;
         public int kill;
         public int exp;
@@ -44,12 +45,14 @@ namespace MyVampireSurvivors
             instance = this;
         }
 
-        public void GameStart()
+        public void GameStart(int id)
         {
-            health = maxHealth;
+            playerId = id;
 
+            health = maxHealth;
+            player.gameObject.SetActive(true);
             // 임시 스크립트 (첫번째 캐릭터 선택)
-            uiLevelUp.Select(0);
+            uiLevelUp.Select(playerId % 2);
 
             Resume();
         }
