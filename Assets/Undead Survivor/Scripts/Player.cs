@@ -63,7 +63,6 @@ namespace MyVampireSurvivors
         // 입력 시스템에서 입력값을 받을 때 호출되는 함수
         void OnMove(InputValue value)
         {
-            if (!GameManager.instance.isLive) return;
             // 입력된 벡터 값을 inputVec에 저장
             inputVec = value.Get<Vector2>();
         }
