@@ -23,7 +23,7 @@ namespace MyVampireSurvivors
         AudioSource[] sfxPlayers;
         int channelIndex;
 
-        [Header("VolumnControl")]
+        [Header("VolumeControl")]
         public AudioMixer audioMixer;
         public Slider bgmSlider;
         public Slider sfxSlider;
@@ -43,6 +43,7 @@ namespace MyVampireSurvivors
 
         private void Start()
         {
+            //Init()에서 초기화시 모종의 이유로 값을 믹서에 적용되지 않음
             bgmSlider.value = GetVolume("BGM"); // BGM 슬라이더 초기화
             sfxSlider.value = GetVolume("SFX"); // SFX 슬라이더 초기화
         }
@@ -127,7 +128,6 @@ namespace MyVampireSurvivors
             {
                 return 1f; // 기본 볼륨 값
             }
-            Debug.Log($"Get float Test{parameterName} =  {PlayerPrefs.GetFloat(parameterName)}");
             float valueInDb = PlayerPrefs.GetFloat(parameterName);
             return Mathf.Pow(10f, valueInDb / 20.0f);
         }
@@ -143,7 +143,6 @@ namespace MyVampireSurvivors
             audioMixer.SetFloat(parameterName, valueInDb); // 오디오 믹서에 볼륨 설정
 
             PlayerPrefs.SetFloat(parameterName, valueInDb); // 플레이어 프레퍼스에 저장
-            Debug.Log("저장되는 값은 = " + valueInDb);
         }
     }
 }

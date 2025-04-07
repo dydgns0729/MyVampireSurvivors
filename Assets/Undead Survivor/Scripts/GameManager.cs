@@ -35,6 +35,7 @@ namespace MyVampireSurvivors
         public LevelUp uiLevelUp;
         public Result uiResult;
         public GameObject enemyCleaner;
+        public Transform uiJoy;
         public GameObject pauseUI;
         #endregion
 
@@ -103,6 +104,11 @@ namespace MyVampireSurvivors
             SceneManager.LoadScene(0);
         }
 
+        public void GameQuit()
+        {
+            Application.Quit();
+        }
+
         // 매 프레임마다 호출되는 함수
         private void Update()
         {
@@ -150,12 +156,14 @@ namespace MyVampireSurvivors
         {
             isLive = false;
             Time.timeScale = 0;
+            uiJoy.localScale = Vector3.zero;
         }
 
         public void Resume()
         {
             isLive = true;
             Time.timeScale = 1;
+            uiJoy.localScale = Vector3.one;
         }
     }
 }

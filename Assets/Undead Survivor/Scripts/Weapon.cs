@@ -171,8 +171,8 @@ namespace MyVampireSurvivors
                 // 총알을 원형으로 배치하기 위해 약간의 이동
                 bullet.Translate(bullet.up * 1.5f, Space.World);
 
-                // 총알 초기화 (피해량 설정, -1은 무한 관통을 의미)
-                bullet.GetComponent<Bullet>().Init(damage, -1, Vector3.zero);
+                // 총알 초기화 (피해량 설정, -100은 무한 관통을 의미)
+                bullet.GetComponent<Bullet>().Init(damage, -100, Vector3.zero);
             }
         }
 

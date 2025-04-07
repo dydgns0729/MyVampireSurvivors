@@ -16,6 +16,8 @@ namespace MyVampireSurvivors
         float timer;
         // 게임 진행 레벨 (게임 시간에 따른 레벨)
         int level;
+
+        public float levelTime;
         #endregion
 
         // 초기화: 자식 오브젝트로 있는 spawnPoints를 가져옴
@@ -23,6 +25,7 @@ namespace MyVampireSurvivors
         {
             // 현재 오브젝트의 자식들 중 Transform 컴포넌트를 모두 가져옴
             spawnPoints = GetComponentsInChildren<Transform>();
+            levelTime = GameManager.instance.maxGameTime / spawnData.Length;
         }
 
         private void Update()
@@ -32,7 +35,7 @@ namespace MyVampireSurvivors
             // 타이머를 deltaTime 만큼 증가시켜줌 (프레임당 시간 간격)
             timer += Time.deltaTime;
             // 레벨은 게임 시간을 10으로 나눈 몫을 내림한 값
-            level = Mathf.Min(Mathf.FloorToInt(GameManager.instance.gameTime / 10f), spawnData.Length - 1);
+            level = Mathf.Min(Mathf.FloorToInt(GameManager.instance.gameTime / levelTime), spawnData.Length - 1);
 
             // 타이머가 일정 시간(0.2초)을 넘으면 적을 생성
             if (timer > spawnData[level].spawnTime)

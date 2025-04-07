@@ -29,7 +29,7 @@ namespace MyVampireSurvivors
             this.per = per;
 
             // 관통 횟수가 -1이 아닐 경우, 총알에 속도 방향을 설정
-            if (per > -1)
+            if (per >= 0)
             {
                 // Rigidbody2D의 linearVelocity를 이용해 총알의 이동 방향과 속도를 설정
                 rb2d.linearVelocity = dir * 15f;
@@ -39,21 +39,30 @@ namespace MyVampireSurvivors
         // 충돌이 발생했을 때 호출되는 함수
         private void OnTriggerEnter2D(Collider2D collision)
         {
-            // 충돌한 오브젝트가 "Enemy" 태그가 아니거나, 관통 횟수가 -1인 경우는 무시
-            if (!collision.CompareTag("Enemy") || per == -1)
+            // 충돌한 오브젝트가 "Enemy" 태그가 아니거나, 관통 횟수가 -100이거나 이름이 불렛이 아닌 경우는 무시
+            if (!collision.CompareTag("Enemy") || per == -100 || !gameObject.name.Contains("Bullet"))
                 return;
 
             // 관통 횟수를 하나 줄임
             per--;
 
             // 관통 횟수가 -1이 되면, 총알이 멈추고 비활성화
-            if (per == -1)
+            if (per < 0)
             {
                 // 속도를 0으로 만들어서 총알의 이동을 멈춤
                 rb2d.linearVelocity = Vector2.zero;
                 // 총알을 비활성화 (게임 오브젝트를 꺼서 더 이상 충돌하지 않게 함)
                 gameObject.SetActive(false);
             }
+        }
+
+        private void OnTriggerExit2D(Collider2D collision)
+        {
+            // 충돌한 오브젝트가 "Enemy" 태그가 아니거나, 관통 횟수가 -100인 경우는 무시
+            if (!collision.CompareTag("Area") || per == -100)
+                return;
+
+            gameObject.SetActive(false); // 총알 비활성화
         }
     }
 }
