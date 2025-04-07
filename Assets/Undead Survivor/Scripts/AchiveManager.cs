@@ -93,6 +93,8 @@ namespace MyVampireSurvivors
         {
             uiNotice.SetActive(true);
 
+            AudioManager.instance.PlaySFX(AudioManager.SFX.LevelUp);
+
             yield return wait;
 
             uiNotice.SetActive(false);

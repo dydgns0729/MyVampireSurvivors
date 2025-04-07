@@ -22,12 +22,18 @@ namespace MyVampireSurvivors
             Next();
             rect.localScale = Vector3.one;
             GameManager.instance.Stop();
+
+            AudioManager.instance.PlaySFX(AudioManager.SFX.LevelUp);
+            AudioManager.instance.EffectBGM(true);
         }
 
         public void Hide()
         {
             rect.localScale = Vector3.zero;
             GameManager.instance.Resume();
+
+            AudioManager.instance.PlaySFX(AudioManager.SFX.Select);
+            AudioManager.instance.EffectBGM(false);
         }
 
         public void Select(int index)

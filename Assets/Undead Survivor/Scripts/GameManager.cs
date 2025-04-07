@@ -11,7 +11,6 @@ namespace MyVampireSurvivors
         public static GameManager instance;
 
         [Header("# Game Control")]
-
         public bool isLive;
         // 게임 시간 변수, 게임이 진행된 시간
         public float gameTime;
@@ -36,6 +35,7 @@ namespace MyVampireSurvivors
         public LevelUp uiLevelUp;
         public Result uiResult;
         public GameObject enemyCleaner;
+        public GameObject pauseUI;
         #endregion
 
         // 게임 시작 시 호출되는 함수
@@ -55,6 +55,9 @@ namespace MyVampireSurvivors
             uiLevelUp.Select(playerId % 2);
 
             Resume();
+
+            AudioManager.instance.PlayBGM(true);
+            AudioManager.instance.PlaySFX(AudioManager.SFX.Select);
         }
 
         public void GameOver()
@@ -71,6 +74,8 @@ namespace MyVampireSurvivors
             uiResult.gameObject.SetActive(true);
             uiResult.Lose();
             Stop();
+            AudioManager.instance.PlayBGM(false);
+            AudioManager.instance.PlaySFX(AudioManager.SFX.Lose);
         }
 
         public void GameVictory()
@@ -88,16 +93,35 @@ namespace MyVampireSurvivors
             uiResult.gameObject.SetActive(true);
             uiResult.Win();
             Stop();
+            AudioManager.instance.PlayBGM(false);
+            AudioManager.instance.PlaySFX(AudioManager.SFX.Win);
         }
 
         public void GameRetry()
         {
+            AudioManager.instance.PlaySFX(AudioManager.SFX.Select);
             SceneManager.LoadScene(0);
         }
 
         // 매 프레임마다 호출되는 함수
         private void Update()
         {
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                AudioManager.instance.PlaySFX(AudioManager.SFX.Select);
+                pauseUI.SetActive(!pauseUI.activeSelf);
+                if (pauseUI.activeSelf)
+                {
+                    AudioManager.instance.EffectBGM(true);
+                    Stop();
+                }
+                else
+                {
+                    AudioManager.instance.EffectBGM(false);
+                    Resume();
+                }
+            }
+
             if (!isLive) return;
 
             // 게임 시간이 흐를 때마다 deltaTime 만큼 증가

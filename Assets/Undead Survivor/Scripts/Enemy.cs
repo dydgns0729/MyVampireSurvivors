@@ -135,10 +135,16 @@ namespace MyVampireSurvivors
                 animator.SetBool("Dead", true);
                 GameManager.instance.kill++;
                 GameManager.instance.GetExp();
+
+                if (GameManager.instance.isLive)
+                {
+                    AudioManager.instance.PlaySFX(AudioManager.SFX.Dead);
+                }
             }
             else
             {
                 animator.SetTrigger("Hit");
+                AudioManager.instance.PlaySFX(AudioManager.SFX.Hit);
             }
         }
 

@@ -201,6 +201,8 @@ namespace MyVampireSurvivors
 
             // 총알 초기화 (피해량, 총알 수, 방향 설정)
             bullet.GetComponent<Bullet>().Init(damage, count, dir);
+
+            AudioManager.instance.PlaySFX(AudioManager.SFX.Range);
         }
         #endregion
     }
