@@ -7,164 +7,154 @@ namespace MyVampireSurvivors
     public class Enemy : MonoBehaviour
     {
         #region Variables
-        // ÀûÀÇ ÀÌµ¿ ¼Óµµ
+        // ì ì˜ ì´ë™ ì†ë„
         public float speed;
 
-        // ¾Ö´Ï¸ŞÀÌ¼Ç ÄÁÆ®·Ñ·¯ ¹è¿­ (ÀûÀÇ ½ºÇÁ¶óÀÌÆ® Å¸ÀÔ¿¡ µû¶ó ´Ù¸£°Ô ¼³Á¤)
+        // ì• ë‹ˆë©”ì´ì…˜ ì»¨íŠ¸ë¡¤ëŸ¬ ë°°ì—´ (ì ì˜ ìŠ¤í”„ë¼ì´íŠ¸ íƒ€ì…ì— ë”°ë¼ ë‹¤ë¥´ê²Œ ì„¤ì •)
         public RuntimeAnimatorController[] animatorControllers;
 
-        // ÀûÀÇ Ã¼·Â°ú ÃÖ´ë Ã¼·Â
-        public float health;
-        public float maxHealth;
+        // ì ì˜ ì²´ë ¥ê³¼ ìµœëŒ€ ì²´ë ¥
+        //public float health;
+        //public float maxHealth;
 
-        // ÀûÀÌ ÃßÀûÇÒ Å¸°Ù (ÇÃ·¹ÀÌ¾î)
+        // ì ì´ ì¶”ì í•  íƒ€ê²Ÿ (í”Œë ˆì´ì–´)
         public Rigidbody2D target;
 
-        // ÀûÀÌ »ì¾ÆÀÖ´ÂÁö ¿©ºÎ¸¦ ³ªÅ¸³»´Â º¯¼ö
-        bool isLive;
-
-        // ¹°¸®Àû ÀÌµ¿À» À§ÇÑ Rigidbody2D ÄÄÆ÷³ÍÆ®
+        // ë¬¼ë¦¬ì  ì´ë™ì„ ìœ„í•œ Rigidbody2D ì»´í¬ë„ŒíŠ¸
         Rigidbody2D rb2d;
 
         Collider2D collider2d;
 
-        // ¾Ö´Ï¸ŞÀÌ¼ÇÀ» À§ÇÑ Animator ÄÄÆ÷³ÍÆ®
+        // ì• ë‹ˆë©”ì´ì…˜ì„ ìœ„í•œ Animator ì»´í¬ë„ŒíŠ¸
         Animator animator;
 
-        // ½ºÇÁ¶óÀÌÆ® ·»´õ¸µÀ» À§ÇÑ SpriteRenderer ÄÄÆ÷³ÍÆ®
+        // ìŠ¤í”„ë¼ì´íŠ¸ ë Œë”ë§ì„ ìœ„í•œ SpriteRenderer ì»´í¬ë„ŒíŠ¸
         SpriteRenderer spriter;
 
         WaitForFixedUpdate wait;
+
+        Health health;
+
+        bool isKnockBack;
         #endregion
 
-        // ÃÊ±âÈ­ ÀÛ¾÷: ÄÄÆ÷³ÍÆ®µéÀ» °¡Á®¿À±â
+        // ì´ˆê¸°í™” ì‘ì—…: ì»´í¬ë„ŒíŠ¸ë“¤ì„ ê°€ì ¸ì˜¤ê¸°
         private void Awake()
         {
-            // Rigidbody2D ÄÄÆ÷³ÍÆ®¸¦ °¡Á®¿È (ÀûÀÇ ¹°¸®Àû ÀÌµ¿À» ´ã´ç)
+            // Rigidbody2D ì»´í¬ë„ŒíŠ¸ë¥¼ ê°€ì ¸ì˜´ (ì ì˜ ë¬¼ë¦¬ì  ì´ë™ì„ ë‹´ë‹¹)
             rb2d = GetComponent<Rigidbody2D>();
             collider2d = GetComponent<Collider2D>();
-            // SpriteRenderer ÄÄÆ÷³ÍÆ®¸¦ °¡Á®¿È (ÀûÀÇ ½ºÇÁ¶óÀÌÆ® ·»´õ¸µÀ» ´ã´ç)
+            // SpriteRenderer ì»´í¬ë„ŒíŠ¸ë¥¼ ê°€ì ¸ì˜´ (ì ì˜ ìŠ¤í”„ë¼ì´íŠ¸ ë Œë”ë§ì„ ë‹´ë‹¹)
             spriter = GetComponent<SpriteRenderer>();
-            // Animator ÄÄÆ÷³ÍÆ®¸¦ °¡Á®¿È (¾Ö´Ï¸ŞÀÌ¼Ç Á¦¾î¸¦ ´ã´ç)
+            // Animator ì»´í¬ë„ŒíŠ¸ë¥¼ ê°€ì ¸ì˜´ (ì• ë‹ˆë©”ì´ì…˜ ì œì–´ë¥¼ ë‹´ë‹¹)
             animator = GetComponent<Animator>();
 
             wait = new WaitForFixedUpdate();
+
+            health = GetComponent<Health>();
         }
 
-        // ¹°¸®Àû ¾÷µ¥ÀÌÆ®: ¸Å FixedUpdate() È£Ãâ ½Ã ÀûÀÇ ÀÌµ¿À» Ã³¸®
+        // ë¬¼ë¦¬ì  ì—…ë°ì´íŠ¸: ë§¤ FixedUpdate() í˜¸ì¶œ ì‹œ ì ì˜ ì´ë™ì„ ì²˜ë¦¬
         private void FixedUpdate()
         {
             if (!GameManager.instance.isLive) return;
-            // ÀûÀÌ »ì¾ÆÀÖÁö ¾ÊÀ¸¸é ÀÌµ¿À» Ã³¸®ÇÏÁö ¾ÊÀ½
-            if (!isLive || animator.GetCurrentAnimatorStateInfo(0).IsName("Hit"))
+            // Hit Animationì´ ì¬ìƒ ì¤‘ì´ë©´ ì´ë™í•˜ì§€ ì•ŠìŒ
+            if (isKnockBack)
                 return;
 
-            // Å¸°Ù(ÇÃ·¹ÀÌ¾î)¿Í Àû °£ÀÇ ¹æÇâ º¤ÅÍ °è»ê
+            // íƒ€ê²Ÿ(í”Œë ˆì´ì–´)ì™€ ì  ê°„ì˜ ë°©í–¥ ë²¡í„° ê³„ì‚°
             Vector2 dirVec = target.position - rb2d.position;
 
-            // ¹æÇâ º¤ÅÍ¸¦ Á¤±ÔÈ­ÇÏ°í, ¼Óµµ¿Í ½Ã°£ÀÇ µ¨Å¸ °ªÀ» °öÇÏ¿© ÀÌµ¿ÇÒ °Å¸® °è»ê
+            // ë°©í–¥ ë²¡í„°ë¥¼ ì •ê·œí™”í•˜ê³ , ì†ë„ì™€ ì‹œê°„ì˜ ë¸íƒ€ ê°’ì„ ê³±í•˜ì—¬ ì´ë™í•  ê±°ë¦¬ ê³„ì‚°
             Vector2 nextVec = dirVec.normalized * speed * Time.fixedDeltaTime;
 
-            // Rigidbody2DÀÇ MovePosition ¸Ş¼­µå¸¦ »ç¿ëÇØ ¹°¸®ÀûÀ¸·Î ÀûÀ» ÀÌµ¿½ÃÅ´
+            // Rigidbody2Dì˜ MovePosition ë©”ì„œë“œë¥¼ ì‚¬ìš©í•´ ë¬¼ë¦¬ì ìœ¼ë¡œ ì ì„ ì´ë™ì‹œí‚´
             rb2d.MovePosition(rb2d.position + nextVec);
 
-            // ¼Óµµ ¸®¼Â (¼±Çü ¼Óµµ °ª ÃÊ±âÈ­)
+            // ì†ë„ ë¦¬ì…‹ (ì„ í˜• ì†ë„ ê°’ ì´ˆê¸°í™”)
             rb2d.linearVelocity = Vector2.zero;
         }
 
-        // ÈÄÃ³¸® ¾÷µ¥ÀÌÆ®: ¾Ö´Ï¸ŞÀÌ¼ÇÀÌ³ª ¹æÇâ ÀüÈ¯À» Ã³¸®
+        // í›„ì²˜ë¦¬ ì—…ë°ì´íŠ¸: ì• ë‹ˆë©”ì´ì…˜ì´ë‚˜ ë°©í–¥ ì „í™˜ì„ ì²˜ë¦¬
         private void LateUpdate()
         {
-            // ÀûÀÌ »ì¾ÆÀÖÁö ¾ÊÀ¸¸é ¹æÇâ ÀüÈ¯À» Ã³¸®ÇÏÁö ¾ÊÀ½
-            if (!isLive || !GameManager.instance.isLive)
+            // í”Œë ˆì´ì–´ë‚˜ ëª¬ìŠ¤í„°ê°€ ì£½ì—ˆë‹¤ë©´ ë¦¬í„´
+            if (!health.isLive || !GameManager.instance.isLive)
                 return;
 
-            // Å¸°Ù(ÇÃ·¹ÀÌ¾î)ÀÇ X ÁÂÇ¥°¡ ÀûÀÇ X ÁÂÇ¥º¸´Ù ÀÛÀ¸¸é ½ºÇÁ¶óÀÌÆ®¸¦ µÚÁıÀ½
-            // ÀÌ´Â ÀûÀÌ ÇÃ·¹ÀÌ¾î¸¦ ¹Ù¶óº¸´Â ¹æÇâÀ» ¹İ¿µÇÏ±â À§ÇÑ Ã³¸®
+            // íƒ€ê²Ÿ(í”Œë ˆì´ì–´)ì˜ X ì¢Œí‘œê°€ ì ì˜ X ì¢Œí‘œë³´ë‹¤ ì‘ìœ¼ë©´ ìŠ¤í”„ë¼ì´íŠ¸ë¥¼ ë’¤ì§‘ìŒ
+            // ì´ëŠ” ì ì´ í”Œë ˆì´ì–´ë¥¼ ë°”ë¼ë³´ëŠ” ë°©í–¥ì„ ë°˜ì˜í•˜ê¸° ìœ„í•œ ì²˜ë¦¬
             spriter.flipX = target.position.x < rb2d.position.x;
         }
 
-        // ÀûÀÌ È°¼ºÈ­µÉ ¶§ È£ÃâµÇ´Â ¸Ş¼­µå
+        // ì ì´ í™œì„±í™”ë  ë•Œ í˜¸ì¶œë˜ëŠ” ë©”ì„œë“œ
         private void OnEnable()
         {
-            // ÀûÀÇ Å¸°ÙÀ» ÇÃ·¹ÀÌ¾î·Î ¼³Á¤
+            // ì ì˜ íƒ€ê²Ÿì„ í”Œë ˆì´ì–´ë¡œ ì„¤ì •
             target = GameManager.instance.player.GetComponent<Rigidbody2D>();
 
-            // ÀûÀÇ Ã¼·ÂÀ» ÃÖ´ë Ã¼·ÂÀ¸·Î ¼³Á¤
-            health = maxHealth;
-
-            // ÀûÀÌ È°¼ºÈ­µÉ ¶§ »ì¾ÆÀÖ´Â »óÅÂ·Î ÃÊ±âÈ­
-            isLive = true;
+            // ì ì´ í™œì„±í™”ë  ë•Œ ì‚´ì•„ìˆëŠ” ìƒíƒœë¡œ ì´ˆê¸°í™”
             collider2d.enabled = true;
             rb2d.simulated = true;
             spriter.sortingOrder = 2;
             animator.SetBool("Dead", false);
+
+            health.OnHealthChanged += OnDamaged;
+            health.OnDeath += OnDeath;
         }
 
-        // Àû ÃÊ±âÈ­ ¸Ş¼­µå: SpawnData¿¡ µû¶ó ÀûÀÇ »óÅÂ ÃÊ±âÈ­
-        public void Init(SpawnData spawnData)
+        private void OnDisable()
         {
-            // ¾Ö´Ï¸ŞÀÌ¼Ç ÄÁÆ®·Ñ·¯¸¦ ½ºÆù µ¥ÀÌÅÍ¿¡ ¸Â°Ô ¼³Á¤
-            animator.runtimeAnimatorController = animatorControllers[spawnData.spriteType];
-            // ÀÌµ¿ ¼Óµµ¿Í Ã¼·ÂÀ» ½ºÆù µ¥ÀÌÅÍ¿¡ ¸Â°Ô ¼³Á¤
-            speed = spawnData.speed;
-            maxHealth = spawnData.health;
-            health = spawnData.health;
+            // ì ì´ ë¹„í™œì„±í™”ë  ë•Œ ì´ë²¤íŠ¸ êµ¬ë… í•´ì œ
+            health.OnHealthChanged -= OnDamaged;
+            health.OnDeath -= OnDeath;
         }
 
-        // Ãæµ¹ Ã³¸®: ÃÑ¾Ë°ú Ãæµ¹ ½Ã Ã³¸®
-        public void OnTriggerEnter2D(Collider2D collision)
+        private void OnDamaged()
         {
-            // Ãæµ¹ÇÑ ¿ÀºêÁ§Æ®°¡ "Bullet" ÅÂ±×¸¦ °¡ÁöÁö ¾ÊÀ¸¸é Ã³¸®ÇÏÁö ¾ÊÀ½
-            if (!collision.CompareTag("Bullet") || !isLive)
-                return;
-
-            // ÃÑ¾ËÀÇ ÇÇÇØ¸¦ ¹Ş¾Æ Ã¼·Â °¨¼Ò
-            health -= collision.GetComponent<Bullet>().damage;
-
             StartCoroutine(KnockBack());
 
-            // Ã¼·ÂÀÌ 0 ÀÌÇÏ°¡ µÇ¸é Á×À½ Ã³¸®
-            if (health <= 0)
-            {
-                // Á×À½ »óÅÂ·Î ÀüÈ¯
-                isLive = false;
-                collider2d.enabled = false;
-                rb2d.simulated = false;
-                spriter.sortingOrder = 1;
-                animator.SetBool("Dead", true);
-                GameManager.instance.kill++;
-                GameManager.instance.GetExp();
+            animator.SetTrigger("Hit");
+            AudioManager.instance.PlaySFX(AudioManager.SFX.Hit);
+        }
 
-                if (GameManager.instance.isLive)
-                {
-                    AudioManager.instance.PlaySFX(AudioManager.SFX.Dead);
-                }
-            }
-            else
+        private void OnDeath()
+        {
+            // ì£½ìŒ ìƒíƒœë¡œ ì „í™˜
+            collider2d.enabled = false;
+            // ë¬¼ë¦¬ ê³„ì‚° ë¹„í™œì„±í™”
+            rb2d.simulated = false;
+            spriter.sortingOrder = 1;
+            animator.SetBool("Dead", true);
+            GameManager.instance.kill++;
+            GameManager.instance.GetExp();
+
+            if (GameManager.instance.isLive)
             {
-                animator.SetTrigger("Hit");
-                AudioManager.instance.PlaySFX(AudioManager.SFX.Hit);
+                AudioManager.instance.PlaySFX(AudioManager.SFX.Dead);
             }
+        }
+
+        // ì  ì´ˆê¸°í™” ë©”ì„œë“œ: SpawnDataì— ë”°ë¼ ì ì˜ ìƒíƒœ ì´ˆê¸°í™”
+        public void Init(SpawnData spawnData)
+        {
+            // ì• ë‹ˆë©”ì´ì…˜ ì»¨íŠ¸ë¡¤ëŸ¬ë¥¼ ìŠ¤í° ë°ì´í„°ì— ë§ê²Œ ì„¤ì •
+            animator.runtimeAnimatorController = animatorControllers[spawnData.spriteType];
+            // ì´ë™ ì†ë„ì™€ ì²´ë ¥ì„ ìŠ¤í° ë°ì´í„°ì— ë§ê²Œ ì„¤ì •
+            speed = spawnData.speed;
+            health.Init(spawnData.health);
         }
 
         IEnumerator KnockBack()
         {
-            //´ÙÀ½ ¹°¸® ÇÁ·¹ÀÓ±îÁö µô·¹ÀÌ
-            yield return wait;
-
+            isKnockBack = true;
             Vector3 playerPos = GameManager.instance.player.transform.position;
             Vector3 dirVec = transform.position - playerPos;
             rb2d.AddForce(dirVec.normalized * 3, ForceMode2D.Impulse);
 
-        }
-
-        // ÀûÀÌ Á×¾úÀ» ¶§ È£ÃâµÇ´Â ÇÔ¼ö
-        private void Dead()
-        {
-            // ÀûÀÇ °ÔÀÓ ¿ÀºêÁ§Æ®¸¦ ºñÈ°¼ºÈ­
-            gameObject.SetActive(false);
-
+            //ë‹¤ìŒ ë¬¼ë¦¬ í”„ë ˆì„ê¹Œì§€ ë”œë ˆì´
+            yield return new WaitForSeconds(0.05f);
+            isKnockBack = false;
         }
     }
 }

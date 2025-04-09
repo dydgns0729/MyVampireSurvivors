@@ -1,14 +1,14 @@
 using UnityEngine;
-using UnityEngine.InputSystem;      // New Input SystemÀ» »ç¿ëÇÏ±â À§ÇØ Ãß°¡
+using UnityEngine.InputSystem;      // New Input Systemì„ ì‚¬ìš©í•˜ê¸° ìœ„í•´ ì¶”ê°€
 
 namespace MyVampireSurvivors
 {
     public class Player : MonoBehaviour
     {
         #region Variables
-        // ÇÃ·¹ÀÌ¾îÀÇ ÀÔ·Â º¤ÅÍ (ÀÌµ¿ ¹æÇâ)
+        // í”Œë ˆì´ì–´ì˜ ì…ë ¥ ë²¡í„° (ì´ë™ ë°©í–¥)
         public Vector2 inputVec;
-        // ÇÃ·¹ÀÌ¾îÀÇ ÀÌµ¿ ¼Óµµ
+        // í”Œë ˆì´ì–´ì˜ ì´ë™ ì†ë„
         public float speed;
 
         public Scanner scanner;
@@ -17,64 +17,64 @@ namespace MyVampireSurvivors
 
         public RuntimeAnimatorController[] animCon;
 
-        // ¹°¸®Àû Ã³¸®¸¦ À§ÇÑ Rigidbody2D ÄÄÆ÷³ÍÆ®
+        // ë¬¼ë¦¬ì  ì²˜ë¦¬ë¥¼ ìœ„í•œ Rigidbody2D ì»´í¬ë„ŒíŠ¸
         Rigidbody2D rb2d;
 
-        // ½ºÇÁ¶óÀÌÆ® ·»´õ·¯, ÇÃ·¹ÀÌ¾îÀÇ ½ºÇÁ¶óÀÌÆ®¸¦ ´Ù·ç´Â ÄÄÆ÷³ÍÆ®
+        // ìŠ¤í”„ë¼ì´íŠ¸ ë Œë”ëŸ¬, í”Œë ˆì´ì–´ì˜ ìŠ¤í”„ë¼ì´íŠ¸ë¥¼ ë‹¤ë£¨ëŠ” ì»´í¬ë„ŒíŠ¸
         SpriteRenderer spriteRenderer;
 
-        // ¾Ö´Ï¸ŞÀÌÅÍ ÄÄÆ÷³ÍÆ®, ¾Ö´Ï¸ŞÀÌ¼ÇÀ» Á¦¾îÇÏ´Â µ¥ »ç¿ë
+        // ì• ë‹ˆë©”ì´í„° ì»´í¬ë„ŒíŠ¸, ì• ë‹ˆë©”ì´ì…˜ì„ ì œì–´í•˜ëŠ” ë° ì‚¬ìš©
         Animator animator;
         #endregion
 
-        // ÃÊ±âÈ­ ÀÛ¾÷, ÇÊ¿äÇÑ ÄÄÆ÷³ÍÆ®µé ÂüÁ¶
+        // ì´ˆê¸°í™” ì‘ì—…, í•„ìš”í•œ ì»´í¬ë„ŒíŠ¸ë“¤ ì°¸ì¡°
         private void Awake()
         {
-            // Rigidbody2D ÄÄÆ÷³ÍÆ®¸¦ °¡Á®¿È
+            // Rigidbody2D ì»´í¬ë„ŒíŠ¸ë¥¼ ê°€ì ¸ì˜´
             rb2d = GetComponent<Rigidbody2D>();
-            // SpriteRenderer ÄÄÆ÷³ÍÆ®¸¦ °¡Á®¿È
+            // SpriteRenderer ì»´í¬ë„ŒíŠ¸ë¥¼ ê°€ì ¸ì˜´
             spriteRenderer = GetComponent<SpriteRenderer>();
-            // Animator ÄÄÆ÷³ÍÆ®¸¦ °¡Á®¿È
+            // Animator ì»´í¬ë„ŒíŠ¸ë¥¼ ê°€ì ¸ì˜´
             animator = GetComponent<Animator>();
 
             scanner = GetComponent<Scanner>();
 
-            //ºñÈ°¼ºÈ­µÈ ÄÄÆ÷³ÍÆ®µé °¡Á®¿À±â (true)
+            //ë¹„í™œì„±í™”ëœ ì»´í¬ë„ŒíŠ¸ë“¤ ê°€ì ¸ì˜¤ê¸° (true)
             hands = GetComponentsInChildren<Hand>(true);
         }
 
         private void OnEnable()
         {
-            speed *= Character.Speed; // ÇÃ·¹ÀÌ¾îÀÇ ¼Óµµ¸¦ ¼³Á¤
+            speed *= Character.Speed; // í”Œë ˆì´ì–´ì˜ ì†ë„ë¥¼ ì„¤ì •
             animator.runtimeAnimatorController = animCon[GameManager.instance.playerId];
         }
 
-        // ¹°¸®Àû ¾÷µ¥ÀÌÆ® ÇÔ¼ö (¸Å ÇÁ·¹ÀÓ °íÁ¤µÈ ½Ã°£ °£°İÀ¸·Î È£Ãâ)
+        // ë¬¼ë¦¬ì  ì—…ë°ì´íŠ¸ í•¨ìˆ˜ (ë§¤ í”„ë ˆì„ ê³ ì •ëœ ì‹œê°„ ê°„ê²©ìœ¼ë¡œ í˜¸ì¶œ)
         private void FixedUpdate()
         {
             if (!GameManager.instance.isLive) return;
-            // ÀÔ·ÂµÈ ¹æÇâ º¤ÅÍ¿¡ ¼Óµµ¸¦ °öÇÏ¿© ´ÙÀ½ ÀÌµ¿ÇÒ º¤ÅÍ °è»ê
+            // ì…ë ¥ëœ ë°©í–¥ ë²¡í„°ì— ì†ë„ë¥¼ ê³±í•˜ì—¬ ë‹¤ìŒ ì´ë™í•  ë²¡í„° ê³„ì‚°
             Vector2 nextVec = inputVec * speed * Time.fixedDeltaTime;
 
-            // Rigidbody2DÀÇ MovePositionÀ» »ç¿ëÇÏ¿© ÇÃ·¹ÀÌ¾î À§Ä¡ ÀÌµ¿
+            // Rigidbody2Dì˜ MovePositionì„ ì‚¬ìš©í•˜ì—¬ í”Œë ˆì´ì–´ ìœ„ì¹˜ ì´ë™
             rb2d.MovePosition(rb2d.position + nextVec);
         }
 
-        // ÀÔ·Â ½Ã½ºÅÛ¿¡¼­ ÀÔ·Â°ªÀ» ¹ŞÀ» ¶§ È£ÃâµÇ´Â ÇÔ¼ö
+        // ì…ë ¥ ì‹œìŠ¤í…œì—ì„œ ì…ë ¥ê°’ì„ ë°›ì„ ë•Œ í˜¸ì¶œë˜ëŠ” í•¨ìˆ˜
         void OnMove(InputValue value)
         {
-            // ÀÔ·ÂµÈ º¤ÅÍ °ªÀ» inputVec¿¡ ÀúÀå
+            // ì…ë ¥ëœ ë²¡í„° ê°’ì„ inputVecì— ì €ì¥
             inputVec = value.Get<Vector2>();
         }
 
-        // ÇÁ·¹ÀÓ ÈÄ ¾÷µ¥ÀÌÆ® ÇÔ¼ö (¾Ö´Ï¸ŞÀÌ¼Ç°ú ½ºÇÁ¶óÀÌÆ® È¸Àü µî)
+        // í”„ë ˆì„ í›„ ì—…ë°ì´íŠ¸ í•¨ìˆ˜ (ì• ë‹ˆë©”ì´ì…˜ê³¼ ìŠ¤í”„ë¼ì´íŠ¸ íšŒì „ ë“±)
         private void LateUpdate()
         {
             if (!GameManager.instance.isLive) return;
-            // ¾Ö´Ï¸ŞÀÌÅÍ¿¡ "Speed" ÆÄ¶ó¹ÌÅÍ¸¦ ¼³Á¤ÇÏ¿© ¾Ö´Ï¸ŞÀÌ¼Ç ÀüÈ¯
+            // ì• ë‹ˆë©”ì´í„°ì— "Speed" íŒŒë¼ë¯¸í„°ë¥¼ ì„¤ì •í•˜ì—¬ ì• ë‹ˆë©”ì´ì…˜ ì „í™˜
             animator.SetFloat("Speed", inputVec.magnitude);
 
-            // XÃàÀ¸·Î ÀÌµ¿ ÁßÀÌ¶ó¸é ½ºÇÁ¶óÀÌÆ®ÀÇ flipX °ª º¯°æ (¿ŞÂÊ/¿À¸¥ÂÊ ¹æÇâ ÀüÈ¯)
+            // Xì¶•ìœ¼ë¡œ ì´ë™ ì¤‘ì´ë¼ë©´ ìŠ¤í”„ë¼ì´íŠ¸ì˜ flipX ê°’ ë³€ê²½ (ì™¼ìª½/ì˜¤ë¥¸ìª½ ë°©í–¥ ì „í™˜)
             if (inputVec.x != 0)
             {
                 spriteRenderer.flipX = inputVec.x < 0;
@@ -83,7 +83,7 @@ namespace MyVampireSurvivors
 
         private void OnCollisionStay2D(Collision2D collision)
         {
-            if (!GameManager.instance.isLive) return;
+            if (!GameManager.instance.isLive || !collision.gameObject.CompareTag("Enemy")) return;
 
             GameManager.instance.health -= Time.deltaTime * 10f;
 

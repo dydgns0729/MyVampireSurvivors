@@ -7,14 +7,14 @@ namespace MyVampireSurvivors
     public class GameManager : MonoBehaviour
     {
         #region Variables
-        // ½Ì±ÛÅæ ÆÐÅÏÀ» À§ÇÑ ÀÎ½ºÅÏ½º º¯¼ö
+        // ì‹±ê¸€í†¤ íŒ¨í„´ì„ ìœ„í•œ ì¸ìŠ¤í„´ìŠ¤ ë³€ìˆ˜
         public static GameManager instance;
 
         [Header("# Game Control")]
         public bool isLive;
-        // °ÔÀÓ ½Ã°£ º¯¼ö, °ÔÀÓÀÌ ÁøÇàµÈ ½Ã°£
+        // ê²Œìž„ ì‹œê°„ ë³€ìˆ˜, ê²Œìž„ì´ ì§„í–‰ëœ ì‹œê°„
         public float gameTime;
-        // ÃÖ´ë °ÔÀÓ ½Ã°£À» ¼³Á¤ÇÏ´Â º¯¼ö (2ºÐÀ¸·Î ¼³Á¤)
+        // ìµœëŒ€ ê²Œìž„ ì‹œê°„ì„ ì„¤ì •í•˜ëŠ” ë³€ìˆ˜ (2ë¶„ìœ¼ë¡œ ì„¤ì •)
         public float maxGameTime = 2 * 10f;
 
         [Header("# Player Info")]
@@ -27,11 +27,11 @@ namespace MyVampireSurvivors
         public int maxHealth = 100;
 
         [Header("# Game Object")]
-        // Player °´Ã¼¸¦ °ü¸®ÇÏ´Â º¯¼ö
+        // Player ê°ì²´ë¥¼ ê´€ë¦¬í•˜ëŠ” ë³€ìˆ˜
         public Player player;
-        // Ç® °ü¸® Å¬·¡½º (PoolManager) º¯¼ö
+        // í’€ ê´€ë¦¬ í´ëž˜ìŠ¤ (PoolManager) ë³€ìˆ˜
         public PoolManager poolManager;
-        // UI ·¹º§¾÷ ¿ÀºêÁ§Æ®
+        // UI ë ˆë²¨ì—… ì˜¤ë¸Œì íŠ¸
         public LevelUp uiLevelUp;
         public Result uiResult;
         public GameObject enemyCleaner;
@@ -39,11 +39,13 @@ namespace MyVampireSurvivors
         public GameObject pauseUI;
         #endregion
 
-        // °ÔÀÓ ½ÃÀÛ ½Ã È£ÃâµÇ´Â ÇÔ¼ö
+        // ê²Œìž„ ì‹œìž‘ ì‹œ í˜¸ì¶œë˜ëŠ” í•¨ìˆ˜
         private void Awake()
         {
-            // GameManagerÀÇ ÀÎ½ºÅÏ½º¸¦ ½Ì±ÛÅæ ÆÐÅÏÀ¸·Î ¼³Á¤
+            // GameManagerì˜ ì¸ìŠ¤í„´ìŠ¤ë¥¼ ì‹±ê¸€í†¤ íŒ¨í„´ìœ¼ë¡œ ì„¤ì •
             instance = this;
+            //ê²Œìž„ì˜ ê¸°ë³¸ í”„ë ˆìž„ì„ 60ìœ¼ë¡œ ì„¤ì •
+            Application.targetFrameRate = 60;
         }
 
         public void GameStart(int id)
@@ -52,7 +54,7 @@ namespace MyVampireSurvivors
 
             health = maxHealth;
             player.gameObject.SetActive(true);
-            // ÀÓ½Ã ½ºÅ©¸³Æ® (Ã¹¹øÂ° Ä³¸¯ÅÍ ¼±ÅÃ)
+            // ìž„ì‹œ ìŠ¤í¬ë¦½íŠ¸ (ì²«ë²ˆì§¸ ìºë¦­í„° ì„ íƒ)
             uiLevelUp.Select(playerId % 2);
 
             Resume();
@@ -104,36 +106,48 @@ namespace MyVampireSurvivors
             SceneManager.LoadScene(0);
         }
 
+        public void GamePause(bool pause)
+        {
+            AudioManager.instance.PlaySFX(AudioManager.SFX.Select);
+            AudioManager.instance.EffectBGM(pause);
+            if (pause)
+            {
+                Stop();
+            }
+            else
+            {
+                Resume();
+            }
+        }
+
         public void GameQuit()
         {
             Application.Quit();
         }
 
-        // ¸Å ÇÁ·¹ÀÓ¸¶´Ù È£ÃâµÇ´Â ÇÔ¼ö
+        // ë§¤ í”„ë ˆìž„ë§ˆë‹¤ í˜¸ì¶œë˜ëŠ” í•¨ìˆ˜
         private void Update()
         {
-            if (Input.GetKeyDown(KeyCode.Escape))
-            {
-                AudioManager.instance.PlaySFX(AudioManager.SFX.Select);
-                pauseUI.SetActive(!pauseUI.activeSelf);
-                if (pauseUI.activeSelf)
-                {
-                    AudioManager.instance.EffectBGM(true);
-                    Stop();
-                }
-                else
-                {
-                    AudioManager.instance.EffectBGM(false);
-                    Resume();
-                }
-            }
-
+            //if (Input.GetKeyDown(KeyCode.Escape))
+            //{
+            //    AudioManager.instance.PlaySFX(AudioManager.SFX.Select);
+            //    pauseUI.SetActive(!pauseUI.activeSelf);
+            //    if (pauseUI.activeSelf)
+            //    {
+            //        AudioManager.instance.EffectBGM(true);
+            //        Stop();
+            //    }
+            //    else
+            //    {
+            //        AudioManager.instance.EffectBGM(false);
+            //        Resume();
+            //    }
+            //}
             if (!isLive) return;
-
-            // °ÔÀÓ ½Ã°£ÀÌ Èå¸¦ ¶§¸¶´Ù deltaTime ¸¸Å­ Áõ°¡
+            // ê²Œìž„ ì‹œê°„ì´ íë¥¼ ë•Œë§ˆë‹¤ deltaTime ë§Œí¼ ì¦ê°€
             gameTime += Time.deltaTime;
 
-            // °ÔÀÓ ½Ã°£ÀÌ ÃÖ´ë °ÔÀÓ ½Ã°£À» ³ÑÁö ¾Êµµ·Ï Á¦ÇÑ
+            // ê²Œìž„ ì‹œê°„ì´ ìµœëŒ€ ê²Œìž„ ì‹œê°„ì„ ë„˜ì§€ ì•Šë„ë¡ ì œí•œ
             if (gameTime > maxGameTime)
             {
                 gameTime = maxGameTime;

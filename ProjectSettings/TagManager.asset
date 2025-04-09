@@ -51,5 +51,8 @@ TagManager:
   - name: Weapon
     uniqueID: 1130889705
     locked: 0
+  - name: Tower
+    uniqueID: 3088969783
+    locked: 0
   m_RenderingLayers:
   - Default
