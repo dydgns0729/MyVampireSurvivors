@@ -36,7 +36,10 @@ namespace MyVampireSurvivors
         public Result uiResult;
         public GameObject enemyCleaner;
         public Transform uiJoy;
-        public GameObject pauseUI;
+        public GameObject inventoryUI;
+
+        [Header("# Inventory")]
+        public ItemContainer inventory;
         #endregion
 
         // 게임 시작 시 호출되는 함수
@@ -128,21 +131,6 @@ namespace MyVampireSurvivors
         // 매 프레임마다 호출되는 함수
         private void Update()
         {
-            //if (Input.GetKeyDown(KeyCode.Escape))
-            //{
-            //    AudioManager.instance.PlaySFX(AudioManager.SFX.Select);
-            //    pauseUI.SetActive(!pauseUI.activeSelf);
-            //    if (pauseUI.activeSelf)
-            //    {
-            //        AudioManager.instance.EffectBGM(true);
-            //        Stop();
-            //    }
-            //    else
-            //    {
-            //        AudioManager.instance.EffectBGM(false);
-            //        Resume();
-            //    }
-            //}
             if (!isLive) return;
             // 게임 시간이 흐를 때마다 deltaTime 만큼 증가
             gameTime += Time.deltaTime;
@@ -178,6 +166,11 @@ namespace MyVampireSurvivors
             isLive = true;
             Time.timeScale = 1;
             uiJoy.localScale = Vector3.one;
+        }
+
+        public void InventoryToggle()
+        {
+            inventoryUI.SetActive(!inventoryUI.activeSelf);
         }
     }
 }
