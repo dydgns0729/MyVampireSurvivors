@@ -1,7 +1,5 @@
 using System.Collections.Generic;
-using System.Collections;
 using UnityEngine;
-using Unity.VisualScripting.Antlr3.Runtime.Misc;
 
 namespace MyVampireSurvivors
 {
@@ -14,6 +12,26 @@ namespace MyVampireSurvivors
 
         // 이 슬롯에 저장된 아이템의 개수
         public int amount;
+
+        public void Copy(ItemSlot itemSlot)
+        {
+            item = itemSlot.item;
+            amount = itemSlot.amount;
+        }
+
+        //아이템 슬롯에 아이템과 개수를 설정하는 함수
+        public void Set(ItemSO item, int amount)
+        {
+            this.item = item;
+            this.amount = amount;
+        }
+
+        //아이템 슬롯을 초기화하는 함수
+        public void Clear()
+        {
+            item = null;
+            amount = 0;
+        }
     }
 
     // ScriptableObject인 ItemContainer 클래스: 여러 아이템을 저장하고 관리하는 컨테이너

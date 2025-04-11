@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: feeb03378541147419839e7c3b983f4d, type: 3}
-  m_Name: BasicStoneTower
+  m_Name: TreeLog
   m_EditorClassIdentifier: 
-  name: BasicStoneTower
-  icon: {fileID: -873554517594428424, guid: cd7b4f964ec0a72448396244ad3d5a12, type: 3}
-  description: "\uACF5\uACA9\uD558\uB294 \uD3EC\uD0D1"
-  prefab: {fileID: 2692656539785705450, guid: ea142ed8ba970ec4392a19781176b603, type: 3}
+  name: TreeLog
+  icon: {fileID: 5159324893738184347, guid: 93509d0c3ead15b4bb13de730a468c82, type: 3}
+  description: 
+  prefab: {fileID: 2683068227568931025, guid: cce528f659bd7a8488a7e3082f43bc93, type: 3}

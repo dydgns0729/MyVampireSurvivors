@@ -48,5 +48,25 @@ namespace MyVampireSurvivors
                 }
             }
         }
+
+        public void OnClick(int id)
+        {
+            // 인벤토리 슬롯 클릭 시, 드래그 앤 드롭 컨트롤러의 OnClick 메서드 호출(아이템 이동)
+            GameManager.instance.dragAndDropController.OnClick(inventory.itemSlots[id]);
+            // 인벤토리 UI 갱신
+            Show();
+        }
+
+        public void OnDragStart(int id)
+        {
+            GameManager.instance.dragAndDropController.OnDragStart(inventory.itemSlots[id]);
+            Show();
+        }
+
+        public void OnDragEnd(int id)
+        {
+            GameManager.instance.dragAndDropController.DropInInventoryUI(inventory.itemSlots[id]);
+            Show();
+        }
     }
 }

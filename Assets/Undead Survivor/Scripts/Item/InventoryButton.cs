@@ -1,10 +1,11 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace MyVampireSurvivors
 {
-    public class InventoryButton : MonoBehaviour
+    public class InventoryButton : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, IDragHandler, IEndDragHandler, IDropHandler
     {
         #region Variables
         [SerializeField]
@@ -12,7 +13,16 @@ namespace MyVampireSurvivors
         [SerializeField]
         TextMeshProUGUI text;
 
-        int myIndex;
+        [SerializeField] int myIndex;
+
+        public ItemSO GetItem                     // 현재 선택한 아이템을 가져오는 프로퍼티
+        {
+            get
+            {
+                // GameManager의 인벤토리 데이터에서 현재 선택된 툴의 아이템을 가져옴
+                return GameManager.instance.inventory.itemSlots[myIndex].item;
+            }
+        }
         #endregion
 
         public void SetIndex(int index)
@@ -35,5 +45,49 @@ namespace MyVampireSurvivors
             text.text = "";
             text.gameObject.SetActive(false);
         }
+
+        // 포인터 클릭 이벤트 처리 메서드
+        public void OnPointerClick(PointerEventData eventData)
+        {
+            InventoryPanel itemPanel = transform.parent.GetComponent<InventoryPanel>();
+            // 가져온 ItemPanel에서 OnClick 메서드를 호출하며, myIndex를 인자로 전달합니다.
+            itemPanel.OnClick(myIndex);
+        }
+
+        #region 드래그 앤 드롭 기능 구현
+        // 드래그 시작 이벤트 처리 메서드
+        public void OnBeginDrag(PointerEventData eventData)
+        {
+            #region 250328 인벤토리 별로 드래그 관리
+            // 부모 오브젝트에서 ItemPanel 컴포넌트를 가져옵니다.
+            InventoryPanel itemPanel = transform.parent.GetComponent<InventoryPanel>();
+
+            itemPanel.OnDragStart(myIndex);
+            #endregion
+        }
+
+        // 드래그 중 이벤트 처리 메서드 (현재는 빈 메서드)
+        public void OnDrag(PointerEventData eventData) { }
+
+        // 드래그 종료 이벤트 처리 메서드
+        public void OnEndDrag(PointerEventData eventData)
+        {
+            // 드래그 중이 아니면 리턴
+            if (!GameManager.instance.dragAndDropController.isDraging) return;
+            // 드래그 앤 드롭 컨트롤러의 드래그 종료 메서드 호출
+            GameManager.instance.dragAndDropController.OnEndDrag();
+        }
+
+        // 드롭 이벤트 처리 메서드
+        public void OnDrop(PointerEventData eventData)
+        {
+            #region 250328 인벤토리 별로 드래그 관리
+            // 부모 오브젝트에서 ItemPanel 컴포넌트를 가져옵니다.
+            InventoryPanel itemPanel = transform.parent.GetComponent<InventoryPanel>();
+
+            itemPanel.OnDragEnd(myIndex);
+            #endregion
+        }
+        #endregion
     }
 }

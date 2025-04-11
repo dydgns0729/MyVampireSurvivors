@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace MyVampireSurvivors
@@ -13,6 +14,12 @@ namespace MyVampireSurvivors
         [SerializeField] float pickUpDistance = 1.5f;
         //이 오브젝트가 존재하는 시간
         [SerializeField] float timeToLive = 10f;
+
+        [Header("# Item")]
+        //획득할 아이템
+        public ItemSO itemSO;
+        //기본 아이템 수량 1
+        public int itemAmount = 1;
         #endregion
 
         private void Awake()
@@ -41,8 +48,28 @@ namespace MyVampireSurvivors
             {
                 Destroy(gameObject);
             }
-
         }
 
+        //어떤 아이템을 생성시킬지, 몇개를 생성시킬지 설정
+        public void Set(ItemSO item, int amount)
+        {
+            this.itemSO = item;
+            this.itemAmount = amount;
+
+            //스프라이트 렌더러를 찾아서 아이템의 아이콘을 설정
+            SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
+            if (spriteRenderer != null)
+            {
+                spriteRenderer.sprite = item.icon;
+            }
+        }
+
+        private void OnDrawGizmos()
+        {
+            //Gizmos를 사용하여 오브젝트의 범위를 시각적으로 표시
+            Gizmos.color = Color.red;
+            Gizmos.DrawWireSphere(transform.position, pickUpDistance);
+            //Gizmos를 사용하여 오브젝트의 이동속도를 시각적으로 표시
+        }
     }
 }

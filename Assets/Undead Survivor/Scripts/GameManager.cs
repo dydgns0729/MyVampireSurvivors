@@ -40,6 +40,7 @@ namespace MyVampireSurvivors
 
         [Header("# Inventory")]
         public ItemContainer inventory;
+        public ItemDragAndDropController dragAndDropController;
         #endregion
 
         // 게임 시작 시 호출되는 함수
