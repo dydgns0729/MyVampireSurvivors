@@ -6,6 +6,7 @@ namespace MyVampireSurvivors
     public class ItemSO : ScriptableObject
     {
         public new string name;
+        public bool stackable;
         public Sprite icon;
         [TextArea]
         public string description;

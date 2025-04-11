@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Unity.VisualScripting.Antlr3.Runtime.Misc;
 using UnityEngine;
 
 namespace MyVampireSurvivors
@@ -41,27 +42,39 @@ namespace MyVampireSurvivors
         // 컨테이너에 저장된 아이템 슬롯들을 리스트로 관리
         public List<ItemSlot> itemSlots;
 
-        // 아이템을 컨테이너에 추가하는 메서드
-        public void Add(ItemSO item, int amount = 1)
+        // 아이템을 추가하는 함수
+        public void Add(ItemSO item, int count = 1)
         {
-            // 이미 존재하는 아이템 슬롯을 찾아봄
-            ItemSlot itemSlot = itemSlots.Find(slot => slot.item == item);
-
-            // 아이템이 이미 존재하면 개수를 증가시킴
-            if (itemSlot != null)
+            // 아이템이 스택 가능한 경우
+            if (item.stackable)
             {
-                itemSlot.amount += amount;
-            }
-            else
-            {
-                // 아이템이 없으면 비어있는 슬롯을 찾아봄
-                itemSlot = itemSlots.Find(slot => slot.item == null);
-
-                // 비어있는 슬롯이 있으면 아이템을 추가
+                // 이미 동일한 아이템이 존재하는 슬롯 찾기
+                ItemSlot itemSlot = itemSlots.Find(slot => slot.item == item);
                 if (itemSlot != null)
                 {
+                    // 같은 아이템이 존재하면 개수만 증가
+                    itemSlot.amount += count;
+                }
+                else
+                {
+                    // 동일한 아이템이 없으면 빈 슬롯(아이템이 null인 곳) 찾기
+                    itemSlot = itemSlots.Find(slot => slot.item == null);
+                    if (itemSlot != null)
+                    {
+                        // 빈 슬롯에 아이템 추가 및 개수 설정
+                        itemSlot.item = item;
+                        itemSlot.amount = count;
+                    }
+                }
+            }
+            else  // 아이템이 스택 불가능한 경우 (예: 무기, 도구 등)
+            {
+                // 빈 슬롯(아이템이 null인 곳) 찾기
+                ItemSlot itemSlot = itemSlots.Find(slot => slot.item == null);
+                if (itemSlot != null)
+                {
+                    // 빈 슬롯에 아이템 추가 (개수는 필요 없음)
                     itemSlot.item = item;
-                    itemSlot.amount = amount;
                 }
             }
         }

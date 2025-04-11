@@ -33,7 +33,7 @@ namespace MyVampireSurvivors
         }
 
         // 슬롯 클릭 시 호출되는 메서드
-        public void OnClick(ItemSlot clickedSlot)
+        public void ItemMove(ItemSlot clickedSlot)
         {
             // 현재 슬롯에 아이템이 없으면
             if (itemSlot.item == null)
@@ -43,10 +43,15 @@ namespace MyVampireSurvivors
             }
             else // 현재 슬롯에 아이템이 있을 경우
             {
+                isDraging = false;
                 if (this.itemSlot.item == clickedSlot.item)  // 같은 아이템이면
                 {
-                    this.itemSlot.amount += clickedSlot.amount;  // 수량 합치기
-                    clickedSlot.Clear();                       // 클릭한 슬롯 비우기
+                    if (this.itemSlot.item.stackable)  // 스택 가능한 아이템이면
+                    {
+                        this.itemSlot.amount += clickedSlot.amount;  // 수량 합치기
+                        clickedSlot.Copy(itemSlot); // 클릭한 슬롯에 현재 슬롯의 아이템과 개수 설정
+                        itemSlot.Clear(); // 마우스 아이템 슬롯 비우기
+                    }
                 }
                 else  // 아이템이 다른 경우
                 {
@@ -75,14 +80,14 @@ namespace MyVampireSurvivors
         public void OnDragStart(ItemSlot draggedSlot)
         {
             isDraging = true;     // 드래그 중 플래그 설정
-            OnClick(draggedSlot); // 드래그하는 슬롯 클릭 처리
+            ItemMove(draggedSlot); // 드래그하는 슬롯 클릭 처리
         }
 
         // 인벤토리 UI에 드롭 시 호출되는 메서드
         public void DropInInventoryUI(ItemSlot targetSlot)
         {
             isDraging = false;   // 드래그 중 플래그 해제
-            OnClick(targetSlot); // 타겟 슬롯 클릭 처리
+            ItemMove(targetSlot); // 타겟 슬롯 클릭 처리
         }
 
         // 드래그 종료 시 호출되는 메서드
@@ -96,10 +101,21 @@ namespace MyVampireSurvivors
         private void DropItem()
         {
             Vector3 worldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);        // 마우스 위치를 3D 월드 좌표로 변환
-            worldPosition.z = 0f;                                                               // z 값 0으로 설정 (2D 게임을 위해)
-            ItemSpawnManager.instance.SpawnItem(worldPosition, itemSlot.item, itemSlot.amount);  // 아이템을 월드에 드롭
-            itemSlot.Clear();                                                                   // 현재 슬롯 비우기
-            UpdateIcon();                                                                       // 아이콘 업데이트 메서드 호출
+            worldPosition.z = 0f;                                                               // z 값 0으로 설정 (2D 게임)
+
+            if (itemSlot.item.name.Contains("Tower"))
+            {
+                Debug.Log("타워 아이템 드롭");
+                TowerSpawnManager.instance.SpawnTower(worldPosition, itemSlot.item.prefab); // 타워 아이템 드롭
+                itemSlot.amount--;                                                       // 슬롯의 아이템 개수 감소
+                if (itemSlot.amount <= 0) itemSlot.Clear();                             // 슬롯의 아이템 개수가 0 이하이면 슬롯 비우기
+            }
+            else
+            {
+                ItemSpawnManager.instance.SpawnItem(worldPosition, itemSlot.item, itemSlot.amount);  // 아이템을 월드에 드롭
+                itemSlot.Clear();                                                                   // 현재 슬롯 비우기
+            }
+            UpdateIcon();                                                           // 아이콘 업데이트 메서드 호출
         }
     }
 }

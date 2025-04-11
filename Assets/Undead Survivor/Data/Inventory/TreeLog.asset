@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: TreeLog
   m_EditorClassIdentifier: 
   name: TreeLog
-  icon: {fileID: 5159324893738184347, guid: 93509d0c3ead15b4bb13de730a468c82, type: 3}
+  icon: {fileID: 21300000, guid: 0011435f95067d34c8975f7039108e67, type: 3}
   description: 
   prefab: {fileID: 2683068227568931025, guid: cce528f659bd7a8488a7e3082f43bc93, type: 3}
