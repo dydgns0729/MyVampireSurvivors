@@ -54,7 +54,7 @@ namespace MyVampireSurvivors
         public void OnPointerClick(PointerEventData eventData)
         {
             //Debug.Log("아이템 클릭" + GetItem.name);
-            if (GetItem == null && GameManager.instance.dragAndDropController.itemSlot == null) return; // 아이템이 없으면 리턴
+            if (GetItem == null && GameManager.instance.dragAndDropController.itemSlot.item == null) return; // 아이템이 없으면 리턴
             InventoryPanel itemPanel = transform.parent.GetComponent<InventoryPanel>();
             // 가져온 ItemPanel에서 OnClick 메서드를 호출하며, myIndex를 인자로 전달합니다.
             itemPanel.OnClick(myIndex);
@@ -65,7 +65,7 @@ namespace MyVampireSurvivors
         public void OnBeginDrag(PointerEventData eventData)
         {
             //Debug.Log("드래그 시작" + GetItem.name);
-            if (GetItem == null && GameManager.instance.dragAndDropController.itemSlot == null) return; // 아이템이 없으면 리턴
+            if (GetItem == null && GameManager.instance.dragAndDropController.itemSlot.item == null) return; // 아이템이 없으면 리턴
             #region 250328 인벤토리 별로 드래그 관리
             // 부모 오브젝트에서 ItemPanel 컴포넌트를 가져옵니다.
             InventoryPanel itemPanel = transform.parent.GetComponent<InventoryPanel>();
@@ -80,8 +80,8 @@ namespace MyVampireSurvivors
         // 드래그 종료 이벤트 처리 메서드
         public void OnEndDrag(PointerEventData eventData)
         {
-            //Debug.Log("드래그 끝 아이템 버리기" + GetItem.name);
-            if (GetItem == null && GameManager.instance.dragAndDropController.itemSlot == null) return; // 아이템이 없으면 리턴
+            if (GetItem == null && GameManager.instance.dragAndDropController.itemSlot.item == null)
+                return; // 아이템이 없으면 리턴
             // 드래그 중이 아니면 리턴
             if (!GameManager.instance.dragAndDropController.isDraging) return;
             // 드래그 앤 드롭 컨트롤러의 드래그 종료 메서드 호출
@@ -92,7 +92,7 @@ namespace MyVampireSurvivors
         public void OnDrop(PointerEventData eventData)
         {
             //Debug.Log("드래그 끝 아이템 드랍" + GetItem.name);
-            if (GetItem == null && GameManager.instance.dragAndDropController.itemSlot == null) return; // 아이템이 없으면 리턴
+            if (GetItem == null && GameManager.instance.dragAndDropController.itemSlot.item == null) return; // 아이템이 없으면 리턴
             #region 250328 인벤토리 별로 드래그 관리
             // 부모 오브젝트에서 ItemPanel 컴포넌트를 가져옵니다.
             InventoryPanel itemPanel = transform.parent.GetComponent<InventoryPanel>();

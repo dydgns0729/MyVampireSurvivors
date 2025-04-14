@@ -44,22 +44,37 @@ namespace MyVampireSurvivors
             else // 현재 슬롯에 아이템이 있을 경우
             {
                 isDraging = false;
+
                 if (this.itemSlot.item == clickedSlot.item)  // 같은 아이템이면
                 {
-                    if (this.itemSlot.item.stackable)  // 스택 가능한 아이템이면
+                    if (this.itemSlot.item.stackable)        // 스택 가능한 아이템이면
                     {
-                        this.itemSlot.amount += clickedSlot.amount;  // 수량 합치기
-                        clickedSlot.Copy(itemSlot); // 클릭한 슬롯에 현재 슬롯의 아이템과 개수 설정
-                        itemSlot.Clear(); // 마우스 아이템 슬롯 비우기
+                        int max = this.itemSlot.item.maxStack;
+
+                        int sum = this.itemSlot.amount + clickedSlot.amount;
+
+                        if (sum <= max)
+                        {
+                            // 합쳐도 max 이하인 경우 그대로 합치기
+                            clickedSlot.amount = sum;
+                            this.itemSlot.Clear();
+                        }
+                        else
+                        {
+                            // 초과하는 경우 → 클릭된 슬롯은 max까지, 나머지는 슬롯에 남김
+                            int remain = sum - max;
+                            this.itemSlot.amount = remain;
+                            clickedSlot.amount = max;
+                        }
                     }
                 }
-                else  // 아이템이 다른 경우
+                else  // 아이템이 다른 경우 → 위치 교환
                 {
                     SetItem(clickedSlot);
                 }
-
             }
-            UpdateIcon();                          // 아이콘 업데이트 메서드 호출
+
+            UpdateIcon();  // 아이콘 업데이트
         }
 
         private void SetItem(ItemSlot clickedSlot)
@@ -112,7 +127,7 @@ namespace MyVampireSurvivors
             }
             else
             {
-                ItemSpawnManager.instance.SpawnItem(worldPosition, itemSlot.item, itemSlot.amount);  // 아이템을 월드에 드롭
+                ItemSpawnManager.instance.SpawnItem(GameManager.instance.player.transform.position, itemSlot.item, itemSlot.amount);  // 아이템을 월드에 드롭
                 itemSlot.Clear();                                                                   // 현재 슬롯 비우기
             }
             UpdateIcon();                                                           // 아이콘 업데이트 메서드 호출

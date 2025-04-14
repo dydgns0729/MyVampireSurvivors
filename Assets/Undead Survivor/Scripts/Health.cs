@@ -41,31 +41,10 @@ namespace MyVampireSurvivors
             health = maxHealth; // 현재 체력을 최대 체력으로 설정
         }
 
-        // 충돌 처리: 총알과 충돌 시 처리
-        public void OnTriggerEnter2D(Collider2D collision)
-        {
-            // 충돌한 오브젝트가 "Bullet" 태그를 가지지 않으면 처리하지 않음
-            if (!collision.CompareTag("Bullet") || !isLive)
-                return;
-
-            // 총알의 피해를 받아 체력 감소
-            health -= collision.GetComponent<Bullet>().damage;
-
-            // 체력이 0 이하가 되면 죽음 처리
-            if (health <= 0)
-            {
-                // 죽음 상태로 전환
-                isLive = false;
-                OnDeath?.Invoke(); // 죽음 이벤트 호출
-            }
-            else
-            {
-                OnHealthChanged?.Invoke();
-            }
-        }
-
         public void TakeDamage(float damage)
         {
+            Debug.Log("TakeDamage = " + damage);
+
             // 총알의 피해를 받아 체력 감소
             health -= damage;
 

@@ -21,6 +21,12 @@ namespace MyVampireSurvivors
         {
             // 현재 인벤토리 데이터를 UI에 반영
             Show();
+            inventory.inventoryChanged += Show;  // 인벤토리 데이터가 변경될 때마다 UI를 갱신
+        }
+
+        private void OnDisable()
+        {
+            inventory.inventoryChanged -= Show;  // 인벤토리 데이터 변경 이벤트 구독 해제
         }
 
         // 인벤토리 슬롯의 인덱스를 InventoryButton에 설정

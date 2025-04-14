@@ -36,6 +36,10 @@ namespace MyVampireSurvivors
         Health health;
 
         bool isKnockBack;
+
+        [Header("# Test IDT")]
+        public ItemDropTableSO[] itemDropTables;
+        ItemDropTableSO currentIDT;
         #endregion
 
         // 초기화 작업: 컴포넌트들을 가져오기
@@ -110,6 +114,20 @@ namespace MyVampireSurvivors
             health.OnDeath -= OnDeath;
         }
 
+        // 충돌 처리: 총알과 충돌 시 처리
+        public void OnTriggerEnter2D(Collider2D collision)
+        {
+            // 충돌한 오브젝트가 "Bullet" 태그를 가지지 않으면 처리하지 않음
+            if (!collision.CompareTag("Bullet") || !health.isLive)
+                return;
+
+            // 총알의 피해를 받아 체력 감소
+            float damage = collision.GetComponent<Bullet>().damage;
+
+            Debug.Log("Damage = " + damage);
+            health.TakeDamage(damage);
+        }
+
         private void OnDamaged()
         {
             StartCoroutine(KnockBack());
@@ -128,6 +146,8 @@ namespace MyVampireSurvivors
             animator.SetBool("Dead", true);
             GameManager.instance.kill++;
             GameManager.instance.GetExp();
+            // 아이템 드랍
+            currentIDT.ItemDrop(transform.position);
 
             if (GameManager.instance.isLive)
             {
@@ -139,7 +159,11 @@ namespace MyVampireSurvivors
         public void Init(SpawnData spawnData)
         {
             // 애니메이션 컨트롤러를 스폰 데이터에 맞게 설정
-            animator.runtimeAnimatorController = animatorControllers[spawnData.spriteType];
+            animator.runtimeAnimatorController = animatorControllers[spawnData.enemyIndex];
+
+            // 현재 IDT를 스폰 데이터에 맞게 설정
+            currentIDT = itemDropTables[spawnData.enemyIndex];
+
             // 이동 속도와 체력을 스폰 데이터에 맞게 설정
             speed = spawnData.speed;
             health.Init(spawnData.health);

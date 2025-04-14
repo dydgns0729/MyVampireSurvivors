@@ -12,5 +12,6 @@ namespace MyVampireSurvivors
         public string description;
 
         public Transform prefab;
+        public int maxStack;
     }
 }

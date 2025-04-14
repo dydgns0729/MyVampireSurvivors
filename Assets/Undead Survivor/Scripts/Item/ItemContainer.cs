@@ -1,5 +1,5 @@
+using System;
 using System.Collections.Generic;
-using Unity.VisualScripting.Antlr3.Runtime.Misc;
 using UnityEngine;
 
 namespace MyVampireSurvivors
@@ -42,41 +42,91 @@ namespace MyVampireSurvivors
         // 컨테이너에 저장된 아이템 슬롯들을 리스트로 관리
         public List<ItemSlot> itemSlots;
 
-        // 아이템을 추가하는 함수
+        public Action inventoryChanged;  // 인벤토리 변경 시 호출할 델리게이트
+
         public void Add(ItemSO item, int count = 1)
         {
-            // 아이템이 스택 가능한 경우
             if (item.stackable)
             {
-                // 이미 동일한 아이템이 존재하는 슬롯 찾기
-                ItemSlot itemSlot = itemSlots.Find(slot => slot.item == item);
-                if (itemSlot != null)
+                // 먼저 기존 슬롯에 채워 넣기
+                for (int i = 0; i < itemSlots.Count && count > 0; i++)
                 {
-                    // 같은 아이템이 존재하면 개수만 증가
-                    itemSlot.amount += count;
-                }
-                else
-                {
-                    // 동일한 아이템이 없으면 빈 슬롯(아이템이 null인 곳) 찾기
-                    itemSlot = itemSlots.Find(slot => slot.item == null);
-                    if (itemSlot != null)
+                    ItemSlot slot = itemSlots[i];
+
+                    // 같은 아이템이고 아직 maxStack 이하인 슬롯
+                    if (slot.item == item && slot.amount < item.maxStack)
                     {
-                        // 빈 슬롯에 아이템 추가 및 개수 설정
-                        itemSlot.item = item;
-                        itemSlot.amount = count;
+                        int space = item.maxStack - slot.amount;
+                        int toAdd = Mathf.Min(space, count);
+                        slot.amount += toAdd;
+                        count -= toAdd;
                     }
                 }
-            }
-            else  // 아이템이 스택 불가능한 경우 (예: 무기, 도구 등)
-            {
-                // 빈 슬롯(아이템이 null인 곳) 찾기
-                ItemSlot itemSlot = itemSlots.Find(slot => slot.item == null);
-                if (itemSlot != null)
+
+                // 남은 개수가 있다면 빈 슬롯에 새로 추가
+                for (int i = 0; i < itemSlots.Count && count > 0; i++)
                 {
-                    // 빈 슬롯에 아이템 추가 (개수는 필요 없음)
-                    itemSlot.item = item;
+                    ItemSlot slot = itemSlots[i];
+
+                    // 빈 슬롯 찾기
+                    if (slot.item == null)
+                    {
+                        int toAdd = Mathf.Min(item.maxStack, count);
+                        slot.item = item;
+                        slot.amount = toAdd;
+                        count -= toAdd;
+                    }
                 }
+
+                // 슬롯이 부족해서 남은 count가 있다면 버려짐 (또는 로그로 알려줘도 됨)
             }
+            else
+            {
+                // 스택 불가한 경우엔 슬롯 수 만큼만 채워짐
+                for (int i = 0; i < itemSlots.Count && count > 0; i++)
+                {
+                    ItemSlot slot = itemSlots[i];
+                    if (slot.item == null)
+                    {
+                        slot.item = item;
+                        slot.amount = 1;
+                        count--;
+                    }
+                }
+
+                // 슬롯이 부족해서 남은 count가 있다면 버려짐
+            }
+
+            inventoryChanged?.Invoke();
         }
+
+        /// <summary>
+        /// 아이템을 인벤토리에 추가할 수 있는 여유 공간이 있는지 확인하는 함수
+        /// </summary>
+        /// <param name="itemSO">확인할 대상 아이템</param>
+        /// <returns>여유 공간이 있으면 true, 없으면 false</returns>
+        public bool CheckFreeSpace(ItemSO itemSO)
+        {
+            // [공통] 슬롯 중 '빈 슬롯'이 하나라도 있는지 확인하는 로컬 함수
+            // 아이템이 null인 슬롯이 존재하면 true 반환
+            bool HasEmptySlot() => itemSlots.Exists(slot => slot.item == null);
+
+            // [1] 아이템이 스택 가능한 경우
+            if (itemSO.stackable)
+            {
+                // 동일한 아이템이 이미 존재하고, 그 슬롯의 수량이 maxStack 미만인 경우가 있는지 확인
+                // -> 즉, 기존 스택에 아이템을 추가할 수 있는지 확인
+                bool hasStackableSlot = itemSlots.Exists(slot =>
+                    slot.item == itemSO && slot.amount + 1 <= itemSO.maxStack);
+
+                // 기존 스택에 추가 가능하거나, 새로운 스택을 만들 수 있는 빈 슬롯이 있다면 true
+                return hasStackableSlot || HasEmptySlot();
+            }
+
+            // [2] 아이템이 스택 불가능한 경우
+            // => 빈 슬롯이 하나라도 있으면 추가 가능
+            return HasEmptySlot();
+        }
+
     }
 }

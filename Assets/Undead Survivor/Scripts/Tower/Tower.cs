@@ -17,9 +17,12 @@ namespace MyVampireSurvivors
 
         private Animator animator; // 애니메이터 컴포넌트
 
+        Health health; // 체력 컴포넌트
+
         private void Awake()
         {
             animator = GetComponent<Animator>();
+            health = GetComponent<Health>();
         }
 
         void Start()
@@ -90,6 +93,14 @@ namespace MyVampireSurvivors
             bullet.transform.localScale = Vector3.one; // 스케일 초기화
             bullet.GetComponent<TowerBullet>().Fire(startPoint, targetPoint);
         }
+
+        private void OnCollisionStay2D(Collision2D collision)
+        {
+            if (!collision.gameObject.CompareTag("Enemy")) return;
+
+
+        }
+
 
         // 타겟을 감지하는 반경을 시각적으로 보여주는 Gizmos
         void OnDrawGizmosSelected()

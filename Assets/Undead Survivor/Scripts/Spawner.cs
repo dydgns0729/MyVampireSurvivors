@@ -6,24 +6,24 @@ namespace MyVampireSurvivors
     public class Spawner : MonoBehaviour
     {
         #region Variables
-        // ÀûÀ» »ı¼ºÇÒ À§Ä¡µéÀ» ÀúÀåÇÏ´Â ¹è¿­ (ÀÚ½Ä ¿ÀºêÁ§Æ®·Î ÀÖ´Â À§Ä¡µé)
+        // ì ì„ ìƒì„±í•  ìœ„ì¹˜ë“¤ì„ ì €ì¥í•˜ëŠ” ë°°ì—´ (ìì‹ ì˜¤ë¸Œì íŠ¸ë¡œ ìˆëŠ” ìœ„ì¹˜ë“¤)
         public Transform[] spawnPoints;
 
-        // ÀûÀÇ »ı¼º µ¥ÀÌÅÍ (»ı¼º ½Ã°£, ½ºÇÁ¶óÀÌÆ® Å¸ÀÔ, Ã¼·Â, ¼Óµµ µî)
+        // ì ì˜ ìƒì„± ë°ì´í„° (ìƒì„± ì‹œê°„, ìŠ¤í”„ë¼ì´íŠ¸ íƒ€ì…, ì²´ë ¥, ì†ë„ ë“±)
         public SpawnData[] spawnData;
 
-        // Å¸ÀÌ¸Ó º¯¼ö, ÀÏÁ¤ ½Ã°£ °£°İÀ¸·Î ÀûÀ» »ı¼ºÇÏ±â À§ÇÑ º¯¼ö
+        // íƒ€ì´ë¨¸ ë³€ìˆ˜, ì¼ì • ì‹œê°„ ê°„ê²©ìœ¼ë¡œ ì ì„ ìƒì„±í•˜ê¸° ìœ„í•œ ë³€ìˆ˜
         float timer;
-        // °ÔÀÓ ÁøÇà ·¹º§ (°ÔÀÓ ½Ã°£¿¡ µû¸¥ ·¹º§)
+        // ê²Œì„ ì§„í–‰ ë ˆë²¨ (ê²Œì„ ì‹œê°„ì— ë”°ë¥¸ ë ˆë²¨)
         int level;
 
         public float levelTime;
         #endregion
 
-        // ÃÊ±âÈ­: ÀÚ½Ä ¿ÀºêÁ§Æ®·Î ÀÖ´Â spawnPoints¸¦ °¡Á®¿È
+        // ì´ˆê¸°í™”: ìì‹ ì˜¤ë¸Œì íŠ¸ë¡œ ìˆëŠ” spawnPointsë¥¼ ê°€ì ¸ì˜´
         private void Awake()
         {
-            // ÇöÀç ¿ÀºêÁ§Æ®ÀÇ ÀÚ½Äµé Áß Transform ÄÄÆ÷³ÍÆ®¸¦ ¸ğµÎ °¡Á®¿È
+            // í˜„ì¬ ì˜¤ë¸Œì íŠ¸ì˜ ìì‹ë“¤ ì¤‘ Transform ì»´í¬ë„ŒíŠ¸ë¥¼ ëª¨ë‘ ê°€ì ¸ì˜´
             spawnPoints = GetComponentsInChildren<Transform>();
             levelTime = GameManager.instance.maxGameTime / spawnData.Length;
         }
@@ -32,47 +32,46 @@ namespace MyVampireSurvivors
         {
             if (!GameManager.instance.isLive) return;
 
-            // Å¸ÀÌ¸Ó¸¦ deltaTime ¸¸Å­ Áõ°¡½ÃÄÑÁÜ (ÇÁ·¹ÀÓ´ç ½Ã°£ °£°İ)
+            // íƒ€ì´ë¨¸ë¥¼ deltaTime ë§Œí¼ ì¦ê°€ì‹œì¼œì¤Œ (í”„ë ˆì„ë‹¹ ì‹œê°„ ê°„ê²©)
             timer += Time.deltaTime;
-            // ·¹º§Àº °ÔÀÓ ½Ã°£À» 10À¸·Î ³ª´« ¸òÀ» ³»¸²ÇÑ °ª
+            // ë ˆë²¨ì€ ê²Œì„ ì‹œê°„ì„ 10ìœ¼ë¡œ ë‚˜ëˆˆ ëª«ì„ ë‚´ë¦¼í•œ ê°’
             level = Mathf.Min(Mathf.FloorToInt(GameManager.instance.gameTime / levelTime), spawnData.Length - 1);
-
-            // Å¸ÀÌ¸Ó°¡ ÀÏÁ¤ ½Ã°£(0.2ÃÊ)À» ³ÑÀ¸¸é ÀûÀ» »ı¼º
+            // íƒ€ì´ë¨¸ê°€ ì¼ì • ì‹œê°„(0.2ì´ˆ)ì„ ë„˜ìœ¼ë©´ ì ì„ ìƒì„±
             if (timer > spawnData[level].spawnTime)
             {
-                // Spawn() ¸Ş¼­µå¸¦ È£ÃâÇÏ¿© Àû »ı¼º
+                // Spawn() ë©”ì„œë“œë¥¼ í˜¸ì¶œí•˜ì—¬ ì  ìƒì„±
                 Spawn();
-                // Å¸ÀÌ¸Ó ¸®¼Â
+                // íƒ€ì´ë¨¸ ë¦¬ì…‹
                 timer = 0f;
             }
         }
 
-        // ÀûÀ» »ı¼ºÇÏ´Â ¸Ş¼­µå
+        // ì ì„ ìƒì„±í•˜ëŠ” ë©”ì„œë“œ
         void Spawn()
         {
-            // Ç®¿¡¼­ Àû ¿ÀºêÁ§Æ®¸¦ °¡Á®¿Í enemy º¯¼ö¿¡ ÇÒ´ç
+            // í’€ì—ì„œ ì  ì˜¤ë¸Œì íŠ¸ë¥¼ ê°€ì ¸ì™€ enemy ë³€ìˆ˜ì— í• ë‹¹
             GameObject enemy = GameManager.instance.poolManager.Get(0);
 
-            // spawnPoints ¹è¿­¿¡¼­ ·£´ıÇÑ À§Ä¡¸¦ ¼±ÅÃÇÏ¿© ÀûÀÇ À§Ä¡·Î ¼³Á¤
-            // spawnPoints[0]Àº Spawner ÀÚ½ÅÀÌ±â ¶§¹®¿¡ 1ºÎÅÍ ½ÃÀÛÇÏ¿© ·£´ı À§Ä¡¸¦ ¼±ÅÃ
+            // spawnPoints ë°°ì—´ì—ì„œ ëœë¤í•œ ìœ„ì¹˜ë¥¼ ì„ íƒí•˜ì—¬ ì ì˜ ìœ„ì¹˜ë¡œ ì„¤ì •
+            // spawnPoints[0]ì€ Spawner ìì‹ ì´ê¸° ë•Œë¬¸ì— 1ë¶€í„° ì‹œì‘í•˜ì—¬ ëœë¤ ìœ„ì¹˜ë¥¼ ì„ íƒ
             enemy.transform.position = spawnPoints[UnityEngine.Random.Range(1, spawnPoints.Length)].position;
-            // Àû¿¡ ´ëÇÑ ÃÊ±âÈ­ (SpawnData¿¡ µû¶ó ¼Ó¼º ¼³Á¤)
+            // ì ì— ëŒ€í•œ ì´ˆê¸°í™” (SpawnDataì— ë”°ë¼ ì†ì„± ì„¤ì •)
             enemy.GetComponent<Enemy>().Init(spawnData[level]);
         }
     }
 
-    // ÀûÀÇ »ı¼º µ¥ÀÌÅÍ¿¡ ´ëÇÑ Å¬·¡½º
+    // ì ì˜ ìƒì„± ë°ì´í„°ì— ëŒ€í•œ í´ë˜ìŠ¤
     [Serializable]
     public class SpawnData
     {
-        // ÀûÀÌ »ı¼ºµÇ´Â ½Ã°£ °£°İ
+        // ì ì´ ìƒì„±ë˜ëŠ” ì‹œê°„ ê°„ê²©
         public float spawnTime;
 
-        // ÀûÀÇ ½ºÇÁ¶óÀÌÆ® Å¸ÀÔ (¾î¶² ½ºÇÁ¶óÀÌÆ®¸¦ »ç¿ëÇÒÁö)
-        public int spriteType;
-        // ÀûÀÇ Ã¼·Â
+        // ì ì˜ ìŠ¤í”„ë¼ì´íŠ¸ íƒ€ì…, IDT (ì–´ë–¤ ì¸ë±ìŠ¤ì˜ ë°ì´í„°ë¥¼ ì‚¬ìš©í• ì§€)
+        public int enemyIndex;
+        // ì ì˜ ì²´ë ¥
         public int health;
-        // ÀûÀÇ ÀÌµ¿ ¼Óµµ
+        // ì ì˜ ì´ë™ ì†ë„
         public float speed;
     }
 }

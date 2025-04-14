@@ -20,6 +20,9 @@ namespace MyVampireSurvivors
         public ItemSO itemSO;
         //기본 아이템 수량 1
         public int itemAmount = 1;
+
+        [Header("# SpawnBouncing")]
+        public bool isBouncing;
         #endregion
 
         private void Awake()
@@ -27,14 +30,23 @@ namespace MyVampireSurvivors
             player = GameManager.instance.player.transform;
         }
 
+        private void OnEnable()
+        {
+            //10초 타이머 초기화
+            timeToLive = 10f;
+        }
+
         private void Update()
         {
+            if (isBouncing)
+                return;
+
             //10초 타이머 시작
             timeToLive -= Time.deltaTime;
             //10초가 지나면 오브젝트 파괴
             if (timeToLive < 0f)
             {
-                Destroy(gameObject);
+                gameObject.SetActive(false);
             }
 
             //플레이어와의 거리를 계산
@@ -42,11 +54,19 @@ namespace MyVampireSurvivors
             //*가드 절 (distance가 pickUpDistance보다 크면 이 아래의 코드들을 실행하지 않게 설계)
             if (distance > pickUpDistance) return;
             //오브젝트가 플레이어의 위치로 speed의 속도로 이동
-            transform.position = Vector3.MoveTowards(transform.position, player.position, speed * Time.deltaTime);
-            //0.1보다 거리가 작아지면 파괴
-            if (distance < 0.1f)
+
+            // 아이템을 넣을 수 있는 여유 공간이 있는지 검사
+            if (GameManager.instance.inventory.CheckFreeSpace(itemSO))
             {
-                Destroy(gameObject);
+                transform.position = Vector3.MoveTowards(transform.position, player.position, speed * Time.deltaTime);
+                //0.1보다 거리가 작아지면 파괴
+                if (distance < 0.1f)
+                {
+                    GameManager.instance.inventory.Add(itemSO, itemAmount);
+
+                    gameObject.SetActive(false);
+
+                }
             }
         }
 

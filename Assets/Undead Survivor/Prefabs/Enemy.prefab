@@ -217,7 +217,7 @@ Rigidbody2D:
     m_Bits: 0
   m_Interpolate: 0
   m_SleepingMode: 1
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
   m_Constraints: 4
 --- !u!70 &5165737084008331967
 CapsuleCollider2D:
@@ -276,6 +276,12 @@ MonoBehaviour:
   - {fileID: 22100000, guid: 8d1d920724ffb8a409ce0e458dc4b7a9, type: 2}
   - {fileID: 22100000, guid: 25f7a818644b68042bb0c0c2a28d1550, type: 2}
   target: {fileID: 0}
+  itemDropTables:
+  - {fileID: 11400000, guid: c40f08b1eef13744eb7ee0e3f07e0892, type: 2}
+  - {fileID: 11400000, guid: e670d5d16f14a5544b9800911c040acd, type: 2}
+  - {fileID: 11400000, guid: 90714224ba24b6b4cbf3c21d4afc4172, type: 2}
+  - {fileID: 11400000, guid: d5238f95e4e4df24299792b895558af1, type: 2}
+  - {fileID: 11400000, guid: 999482ff9f185a149975c6a49adeee96, type: 2}
 --- !u!114 &7888208124345917804
 MonoBehaviour:
   m_ObjectHideFlags: 0
