@@ -142,6 +142,12 @@ namespace MyVampireSurvivors
                 gameTime = maxGameTime;
                 GameVictory();
             }
+
+            if (Input.GetKeyDown(KeyCode.V))
+            {
+                exp = (nextExp[Mathf.Min(level, nextExp.Length - 1)]) - 1;
+            }
+
         }
 
         public void GetExp()

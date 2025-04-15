@@ -1,5 +1,3 @@
-using MyVampireSurvivors;
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -12,7 +10,9 @@ namespace MyVampireSurvivors
         public float height = 5f; // 포물선의 높이
         public float duration = 2f; // 이동 시간 (고정값)
         public float explosionRadius = 2f; // 폭발 반경 (대충 5로 초기 설정)
-        public float maxDamage = 20f; // 폭발로 인한 데미지
+        public float maxDamage; // 폭발로 인한 데미지(기본 20 // Tower.maxDamage)
+
+        public LayerMask targetLayer;   // 적 레이어 마스크
 
         // 발사 시작 지점 (총알이 발사되는 위치)
         private Vector3 startPoint;
@@ -22,10 +22,11 @@ namespace MyVampireSurvivors
 
         // 총알을 발사하는 함수
         // 이 함수는 발사 시작 지점과 목표 지점을 받아, 총알의 이동을 시작합니다.
-        public void Fire(Vector3 startPoint, Vector3 targetPoint)
+        public void Fire(Vector3 startPoint, Vector3 targetPoint, float maxDamage)
         {
             this.startPoint = startPoint;  // 시작 지점 설정
             this.targetPoint = targetPoint;  // 목표 지점 설정
+            this.maxDamage = maxDamage;  // 최대 데미지 설정
 
             // 이동 시간(duration)을 고정값으로 사용하여, 총알을 포물선 경로로 이동시킴
             StartCoroutine(MoveBulletAlongParabola());
@@ -98,7 +99,7 @@ namespace MyVampireSurvivors
         private void HitInRange()
         {
             // 폭발 중심에서 반경 내의 모든 객체를 탐지 (CircleCollider2D 또는 다른 Collider2D를 사용)
-            Collider2D[] hitColliders = Physics2D.OverlapCircleAll(transform.position, explosionRadius);
+            Collider2D[] hitColliders = Physics2D.OverlapCircleAll(transform.position, explosionRadius, targetLayer);
 
             // 범위 내 모든 콜라이더를 체크
             foreach (var collider in hitColliders)

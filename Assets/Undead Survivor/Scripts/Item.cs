@@ -7,38 +7,38 @@ namespace MyVampireSurvivors
     public class Item : MonoBehaviour
     {
         #region Variables
-        // ¾ÆÀÌÅÛÀÇ µ¥ÀÌÅÍ Á¤º¸ (¾ÆÀÌÅÛÀÇ Á¾·ù, ÀÌ¸§, ¾ÆÀÌÄÜ µî)
+        // ì•„ì´í…œì˜ ë°ì´í„° ì •ë³´ (ì•„ì´í…œì˜ ì¢…ë¥˜, ì´ë¦„, ì•„ì´ì½˜ ë“±)
         public ItemData data;
 
-        // ¾ÆÀÌÅÛÀÇ ·¹º§
+        // ì•„ì´í…œì˜ ë ˆë²¨
         public int level;
 
-        // ¹«±â ¾ÆÀÌÅÛÀÌ ÀÖÀ» °æ¿ì, ÇØ´ç ¹«±â¸¦ °ü¸®ÇÏ´Â º¯¼ö
+        // ë¬´ê¸° ì•„ì´í…œì´ ìˆì„ ê²½ìš°, í•´ë‹¹ ë¬´ê¸°ë¥¼ ê´€ë¦¬í•˜ëŠ” ë³€ìˆ˜
         public Weapon weapon;
 
-        // Àå°©ÀÌ³ª ½Å¹ß ¾ÆÀÌÅÛÀÌ ÀÖÀ» °æ¿ì, ÇØ´ç Àåºñ¸¦ °ü¸®ÇÏ´Â º¯¼ö
+        // ì¥ê°‘ì´ë‚˜ ì‹ ë°œ ì•„ì´í…œì´ ìˆì„ ê²½ìš°, í•´ë‹¹ ì¥ë¹„ë¥¼ ê´€ë¦¬í•˜ëŠ” ë³€ìˆ˜
         public Gear gear;
 
-        // ¾ÆÀÌÅÛ ¾ÆÀÌÄÜÀ» Ç¥½ÃÇÒ ÀÌ¹ÌÁö ÄÄÆ÷³ÍÆ®
+        // ì•„ì´í…œ ì•„ì´ì½˜ì„ í‘œì‹œí•  ì´ë¯¸ì§€ ì»´í¬ë„ŒíŠ¸
         Image icon;
 
-        // ¾ÆÀÌÅÛ ·¹º§À» Ç¥½ÃÇÒ ÅØ½ºÆ® ÄÄÆ÷³ÍÆ®
+        // ì•„ì´í…œ ë ˆë²¨ì„ í‘œì‹œí•  í…ìŠ¤íŠ¸ ì»´í¬ë„ŒíŠ¸
         TextMeshProUGUI textLevel;
         TextMeshProUGUI textName;
         TextMeshProUGUI textDesc;
         #endregion
 
-        // ÃÊ±âÈ­ ÀÛ¾÷: ¾ÆÀÌÅÛ ¾ÆÀÌÄÜ°ú ·¹º§ ÅØ½ºÆ® ÃÊ±âÈ­
+        // ì´ˆê¸°í™” ì‘ì—…: ì•„ì´í…œ ì•„ì´ì½˜ê³¼ ë ˆë²¨ í…ìŠ¤íŠ¸ ì´ˆê¸°í™”
         private void Awake()
         {
-            // ¾ÆÀÌÅÛ ¾ÆÀÌÄÜÀ» È­¸é¿¡ Ç¥½ÃÇÒ Image ÄÄÆ÷³ÍÆ®¸¦ °¡Á®¿È (ÀÚ½Ä ¿ÀºêÁ§Æ®¿¡¼­ µÎ ¹øÂ° Image)
+            // ì•„ì´í…œ ì•„ì´ì½˜ì„ í™”ë©´ì— í‘œì‹œí•  Image ì»´í¬ë„ŒíŠ¸ë¥¼ ê°€ì ¸ì˜´ (ìì‹ ì˜¤ë¸Œì íŠ¸ì—ì„œ ë‘ ë²ˆì§¸ Image)
             icon = GetComponentsInChildren<Image>()[1];
-            // ¾ÆÀÌÅÛÀÇ ¾ÆÀÌÄÜÀ» ¼³Á¤
+            // ì•„ì´í…œì˜ ì•„ì´ì½˜ì„ ì„¤ì •
             icon.sprite = data.itemIcon;
 
-            // ÀÚ½Ä ¿ÀºêÁ§Æ®¿¡ ÀÖ´Â ÅØ½ºÆ® ÄÄÆ÷³ÍÆ®¸¦ °¡Á®¿È
+            // ìì‹ ì˜¤ë¸Œì íŠ¸ì— ìˆëŠ” í…ìŠ¤íŠ¸ ì»´í¬ë„ŒíŠ¸ë¥¼ ê°€ì ¸ì˜´
             TextMeshProUGUI[] texts = GetComponentsInChildren<TextMeshProUGUI>();
-            // Ã¹ ¹øÂ° ÅØ½ºÆ® ÄÄÆ÷³ÍÆ®¸¦ ·¹º§ ÅØ½ºÆ®·Î ¼³Á¤
+            // ì²« ë²ˆì§¸ í…ìŠ¤íŠ¸ ì»´í¬ë„ŒíŠ¸ë¥¼ ë ˆë²¨ í…ìŠ¤íŠ¸ë¡œ ì„¤ì •
             textLevel = texts[0];
             textName = texts[1];
             textDesc = texts[2];
@@ -47,12 +47,12 @@ namespace MyVampireSurvivors
 
         private void OnEnable()
         {
-            // ÇöÀç ·¹º§À» "Lv.1", "Lv.2" µî Çü½ÄÀ¸·Î ÅØ½ºÆ®·Î Ç¥½Ã
-            textLevel.text = $"Lv.{(level + 1)}";
-            // ¾ÆÀÌÅÛÀÇ Á¾·ù¿¡ µû¶ó Ã³¸® ·ÎÁ÷À» ´Ù¸£°Ô ½ÇÇà
+            // í˜„ì¬ ë ˆë²¨ì„ "Lv.1", "Lv.2" ë“± í˜•ì‹ìœ¼ë¡œ í…ìŠ¤íŠ¸ë¡œ í‘œì‹œ
+            textLevel.text = $"Lv.{level}";
+            // ì•„ì´í…œì˜ ì¢…ë¥˜ì— ë”°ë¼ ì²˜ë¦¬ ë¡œì§ì„ ë‹¤ë¥´ê²Œ ì‹¤í–‰
             switch (data.itemType)
             {
-                // ±ÙÁ¢ ¹«±â³ª ¿ø°Å¸® ¹«±âÀÏ °æ¿ì
+                // ê·¼ì ‘ ë¬´ê¸°ë‚˜ ì›ê±°ë¦¬ ë¬´ê¸°ì¼ ê²½ìš°
                 case ItemData.ItemType.Melee:
                 case ItemData.ItemType.Range:
                     // 
@@ -60,7 +60,8 @@ namespace MyVampireSurvivors
                     break;
                 case ItemData.ItemType.Glove:
                 case ItemData.ItemType.Shoe:
-                    // Àåºñ ¾ÆÀÌÅÛÀÇ ¼³¸íÀ» ¼³Á¤
+                case ItemData.ItemType.Tower:
+                    // ì¥ë¹„ ì•„ì´í…œì˜ ì„¤ëª…ì„ ì„¤ì •
                     textDesc.text = string.Format(data.itemDesc, data.damages[level] * 100);
                     break;
                 default:
@@ -70,69 +71,82 @@ namespace MyVampireSurvivors
 
         }
 
-        // ¾ÆÀÌÅÛ Å¬¸¯ ½Ã ½ÇÇàµÇ´Â ÇÔ¼ö (¾ÆÀÌÅÛ »ç¿ë/·¹º§¾÷ Ã³¸®)
+        // ì•„ì´í…œ í´ë¦­ ì‹œ ì‹¤í–‰ë˜ëŠ” í•¨ìˆ˜ (ì•„ì´í…œ ì‚¬ìš©/ë ˆë²¨ì—… ì²˜ë¦¬)
         public void OnClick()
         {
-            // ¾ÆÀÌÅÛÀÇ Á¾·ù¿¡ µû¶ó Ã³¸® ·ÎÁ÷À» ´Ù¸£°Ô ½ÇÇà
+            // ì•„ì´í…œì˜ ì¢…ë¥˜ì— ë”°ë¼ ì²˜ë¦¬ ë¡œì§ì„ ë‹¤ë¥´ê²Œ ì‹¤í–‰
             switch (data.itemType)
             {
-                // ±ÙÁ¢ ¹«±â³ª ¿ø°Å¸® ¹«±âÀÏ °æ¿ì
+                // ê·¼ì ‘ ë¬´ê¸°ë‚˜ ì›ê±°ë¦¬ ë¬´ê¸°ì¼ ê²½ìš°
                 case ItemData.ItemType.Melee:
                 case ItemData.ItemType.Range:
-                    // ·¹º§ÀÌ 0ÀÏ °æ¿ì, »õ·Î¿î ¹«±â¸¦ »ı¼ºÇÏ¿© ÃÊ±âÈ­
+                    // ë ˆë²¨ì´ 0ì¼ ê²½ìš°, ìƒˆë¡œìš´ ë¬´ê¸°ë¥¼ ìƒì„±í•˜ì—¬ ì´ˆê¸°í™”
                     if (level == 0)
                     {
-                        // »õ·Î¿î GameObject¸¦ »ı¼ºÇÏ¿© Weapon ÄÄÆ÷³ÍÆ®¸¦ Ãß°¡
+                        // ìƒˆë¡œìš´ GameObjectë¥¼ ìƒì„±í•˜ì—¬ Weapon ì»´í¬ë„ŒíŠ¸ë¥¼ ì¶”ê°€
                         GameObject newWeapon = new GameObject();
                         weapon = newWeapon.AddComponent<Weapon>();
                         weapon.Init(data);
                     }
                     else
                     {
-                        // ·¹º§¾÷ ½Ã, ÇÇÇØ·®°ú ÃÑ¾Ë ¼ö¸¦ °è»êÇÏ¿© ¹«±â¸¦ °­È­
+                        // ë ˆë²¨ì—… ì‹œ, í”¼í•´ëŸ‰ê³¼ ì´ì•Œ ìˆ˜ë¥¼ ê³„ì‚°í•˜ì—¬ ë¬´ê¸°ë¥¼ ê°•í™”
                         float nextDamage = data.baseDamage;
                         int nextCount = 0;
 
-                        // ·¹º§¿¡ ¸Â´Â ÇÇÇØ·®°ú ÃÑ¾Ë ¼ö Áõ°¡
+                        // ë ˆë²¨ì— ë§ëŠ” í”¼í•´ëŸ‰ê³¼ ì´ì•Œ ìˆ˜ ì¦ê°€
                         nextDamage += data.baseDamage * data.damages[level];
                         nextCount += data.counts[level];
 
-                        // ·¹º§¾÷µÈ ¹«±â·Î ¾÷µ¥ÀÌÆ®
+                        // ë ˆë²¨ì—…ëœ ë¬´ê¸°ë¡œ ì—…ë°ì´íŠ¸
                         weapon.LevelUp(nextDamage, nextCount);
                     }
-                    // ·¹º§À» Áõ°¡½ÃÅ´
+                    // ë ˆë²¨ì„ ì¦ê°€ì‹œí‚´
                     level++;
                     break;
 
-                // Àå°©ÀÌ³ª ½Å¹ßÀÏ °æ¿ì
+                // ì¥ê°‘ì´ë‚˜ ì‹ ë°œì¼ ê²½ìš°
                 case ItemData.ItemType.Glove:
                 case ItemData.ItemType.Shoe:
-                    // ·¹º§ÀÌ 0ÀÏ °æ¿ì, »õ·Î¿î Àåºñ¸¦ »ı¼ºÇÏ¿© ÃÊ±âÈ­
+                case ItemData.ItemType.Tower:
+                    // ë ˆë²¨ì´ 0ì¼ ê²½ìš°, ìƒˆë¡œìš´ ì¥ë¹„ë¥¼ ìƒì„±í•˜ì—¬ ì´ˆê¸°í™”
                     if (level == 0)
                     {
-                        // »õ·Î¿î GameObject¸¦ »ı¼ºÇÏ¿© Gear ÄÄÆ÷³ÍÆ®¸¦ Ãß°¡
+                        // ìƒˆë¡œìš´ GameObjectë¥¼ ìƒì„±í•˜ì—¬ Gear ì»´í¬ë„ŒíŠ¸ë¥¼ ì¶”ê°€
                         GameObject newGear = new GameObject();
                         gear = newGear.AddComponent<Gear>();
                         gear.Init(data);
                     }
                     else
                     {
-                        // ·¹º§¾÷ ½Ã, ÀåºñÀÇ ´É·ÂÄ¡¸¦ Áõ°¡½ÃÅ´
+                        // ë ˆë²¨ì—… ì‹œ, ì¥ë¹„ì˜ ëŠ¥ë ¥ì¹˜ë¥¼ ì¦ê°€ì‹œí‚´
                         float nextRate = data.damages[level];
                         gear.LevelUp(nextRate);
                     }
-                    // ·¹º§À» Áõ°¡½ÃÅ´
+                    // ë ˆë²¨ì„ ì¦ê°€ì‹œí‚´
                     level++;
                     break;
 
-                // È¸º¹ ¾ÆÀÌÅÛÀÏ °æ¿ì
+                // íšŒë³µ ì•„ì´í…œì¼ ê²½ìš°
                 case ItemData.ItemType.Heal:
-                    // °ÔÀÓ ³» ÇÃ·¹ÀÌ¾îÀÇ Ã¼·ÂÀ» ÃÖ´ë Ã¼·ÂÀ¸·Î È¸º¹
+                    // ê²Œì„ ë‚´ í”Œë ˆì´ì–´ì˜ ì²´ë ¥ì„ ìµœëŒ€ ì²´ë ¥ìœ¼ë¡œ íšŒë³µ
                     GameManager.instance.health = GameManager.instance.maxHealth;
+
+                    // í˜„ì¬ ë§µì—ìˆëŠ” ëª¨ë“  íƒ€ì›Œë“¤ì„ ê°€ì ¸ì˜´
+                    Tower[] towers = GameManager.instance.poolManager.GetComponentsInChildren<Tower>();
+                    // ëª¨ë“  íƒ€ì›Œì˜ ì²´ë ¥ì„ ìµœëŒ€ ì²´ë ¥ìœ¼ë¡œ íšŒë³µ
+                    foreach (Tower tower in towers)
+                    {
+                        Health towerHealth = tower.GetComponent<Health>();
+                        if (towerHealth != null)
+                        {
+                            towerHealth.health = towerHealth.maxHealth;
+                        }
+                    }
                     break;
             }
 
-            // ¾ÆÀÌÅÛÀÇ ·¹º§ÀÌ ÃÖ´ë ·¹º§¿¡ µµ´ŞÇÏ¸é ¹öÆ°À» ºñÈ°¼ºÈ­
+            // ì•„ì´í…œì˜ ë ˆë²¨ì´ ìµœëŒ€ ë ˆë²¨ì— ë„ë‹¬í•˜ë©´ ë²„íŠ¼ì„ ë¹„í™œì„±í™”
             if (level == data.damages.Length)
             {
                 GetComponent<Button>().interactable = false;

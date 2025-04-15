@@ -133,3 +133,6 @@ MonoBehaviour:
   duration: 1.5
   explosionRadius: 2
   maxDamage: 20
+  targetLayer:
+    serializedVersion: 2
+    m_Bits: 64

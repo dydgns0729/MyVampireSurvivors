@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace MyVampireSurvivors
@@ -5,75 +6,118 @@ namespace MyVampireSurvivors
     public class Gear : MonoBehaviour
     {
         #region Variables
-        // ÀåºñÀÇ Á¾·ù (Àå°©, ½Å¹ß µî) ¾ÆÀÌÅÛ À¯ÇüÀ» ÀúÀå
+        // ì¥ë¹„ì˜ ì¢…ë¥˜ (ì¥ê°‘, ì‹ ë°œ ë“±) ì•„ì´í…œ ìœ í˜•ì„ ì €ì¥
         public ItemData.ItemType type;
 
-        // ÀåºñÀÇ È¿°ú¸¦ Àû¿ëÇÏ´Â ºñÀ² (¿¹: Àå°© È¿°ú ºñÀ², ½Å¹ß ¼Óµµ Áõ°¡ ºñÀ² µî)
+        // ì¥ë¹„ì˜ íš¨ê³¼ë¥¼ ì ìš©í•˜ëŠ” ë¹„ìœ¨ (ì˜ˆ: ì¥ê°‘ íš¨ê³¼ ë¹„ìœ¨, ì‹ ë°œ ì†ë„ ì¦ê°€ ë¹„ìœ¨ ë“±)
         public float rate;
+
+        public int itemId;
+        public float damage;
         #endregion
 
-        // Àåºñ¸¦ ÃÊ±âÈ­ÇÏ´Â ÇÔ¼ö (¾ÆÀÌÅÛ µ¥ÀÌÅÍ ±â¹İÀ¸·Î ¼³Á¤)
+        // ì¥ë¹„ë¥¼ ì´ˆê¸°í™”í•˜ëŠ” í•¨ìˆ˜ (ì•„ì´í…œ ë°ì´í„° ê¸°ë°˜ìœ¼ë¡œ ì„¤ì •)
         public void Init(ItemData data)
         {
-            // Àåºñ ÀÌ¸§À» "Gear" + ¾ÆÀÌÅÛ ID·Î ¼³Á¤
+            // ì¥ë¹„ ì´ë¦„ì„ "Gear" + ì•„ì´í…œ IDë¡œ ì„¤ì •
             name = "Gear " + data.itemId;
 
-            // ÀåºñÀÇ ºÎ¸ğ¸¦ ÇÃ·¹ÀÌ¾î·Î ¼³Á¤ÇÏ¿© ÇÃ·¹ÀÌ¾î¿Í ÇÔ²² ÀÌµ¿ÇÏµµ·Ï ÇÔ
+            // ì¥ë¹„ì˜ ë¶€ëª¨ë¥¼ í”Œë ˆì´ì–´ë¡œ ì„¤ì •í•˜ì—¬ í”Œë ˆì´ì–´ì™€ í•¨ê»˜ ì´ë™í•˜ë„ë¡ í•¨
             transform.parent = GameManager.instance.player.transform;
 
-            // ÀåºñÀÇ À§Ä¡¸¦ ÇÃ·¹ÀÌ¾îÀÇ À§Ä¡¿Í µ¿ÀÏÇÏ°Ô ¼³Á¤
+            // ì¥ë¹„ì˜ ìœ„ì¹˜ë¥¼ í”Œë ˆì´ì–´ì˜ ìœ„ì¹˜ì™€ ë™ì¼í•˜ê²Œ ì„¤ì •
             transform.localPosition = Vector3.zero;
 
-            // ¾ÆÀÌÅÛ µ¥ÀÌÅÍ¿¡¼­ Àåºñ À¯Çü°ú È¿°ú ºñÀ²À» °¡Á®¿Í¼­ ¼³Á¤
+            // ì•„ì´í…œ ë°ì´í„°ì—ì„œ ì¥ë¹„ ìœ í˜•ê³¼ íš¨ê³¼ ë¹„ìœ¨ì„ ê°€ì ¸ì™€ì„œ ì„¤ì •
             type = data.itemType;
             rate = data.damages[0];
-
-            // ÀåºñÀÇ È¿°ú¸¦ Àû¿ë
+            itemId = data.itemId;
+            damage = data.baseDamage;
+            // ì¥ë¹„ì˜ íš¨ê³¼ë¥¼ ì ìš©
             ApplyGear();
         }
 
-        // Àåºñ ·¹º§¾÷ ÇÔ¼ö (È¿°ú ºñÀ²À» ¾÷µ¥ÀÌÆ®)
+        // ì¥ë¹„ ë ˆë²¨ì—… í•¨ìˆ˜ (íš¨ê³¼ ë¹„ìœ¨ì„ ì—…ë°ì´íŠ¸)
         public void LevelUp(float rate)
         {
-            // ·¹º§¾÷ ½Ã, »õ·Î¿î È¿°ú ºñÀ²À» ¼³Á¤ÇÏ°í Àåºñ È¿°ú¸¦ Àû¿ë
+            // ë ˆë²¨ì—… ì‹œ, ìƒˆë¡œìš´ íš¨ê³¼ ë¹„ìœ¨ì„ ì„¤ì •í•˜ê³  ì¥ë¹„ íš¨ê³¼ë¥¼ ì ìš©
             this.rate = rate;
             ApplyGear();
         }
 
-        // ÀåºñÀÇ È¿°ú¸¦ Àû¿ëÇÏ´Â ÇÔ¼ö
-        // Àåºñ Á¾·ù¿¡ µû¶ó ´Ù¸£°Ô Ã³¸®
+        // ì¥ë¹„ì˜ íš¨ê³¼ë¥¼ ì ìš©í•˜ëŠ” í•¨ìˆ˜
+        // ì¥ë¹„ ì¢…ë¥˜ì— ë”°ë¼ ë‹¤ë¥´ê²Œ ì²˜ë¦¬
         void ApplyGear()
         {
             switch (type)
             {
-                // Àå°©ÀÏ °æ¿ì, ÀåºñÀÇ È¿°ú¸¦ Áõ°¡½ÃÅ°´Â ÇÔ¼ö È£Ãâ
+                // ì¥ê°‘ì¼ ê²½ìš°, ì¥ë¹„ì˜ íš¨ê³¼ë¥¼ ì¦ê°€ì‹œí‚¤ëŠ” í•¨ìˆ˜ í˜¸ì¶œ
                 case ItemData.ItemType.Glove:
                     RateUp();
                     break;
-                // ½Å¹ßÀÏ °æ¿ì, ÇÃ·¹ÀÌ¾îÀÇ ¼Óµµ¸¦ Áõ°¡½ÃÅ°´Â ÇÔ¼ö È£Ãâ
+                // ì‹ ë°œì¼ ê²½ìš°, í”Œë ˆì´ì–´ì˜ ì†ë„ë¥¼ ì¦ê°€ì‹œí‚¤ëŠ” í•¨ìˆ˜ í˜¸ì¶œ
                 case ItemData.ItemType.Shoe:
                     SpeedUp();
+                    break;
+                // íƒ€ì›Œì¼ ê²½ìš°, ê³µê²©ë ¥ê³¼ ë°œì‚¬ ì†ë„ë¥¼ ì¦ê°€ì‹œí‚¤ëŠ” í•¨ìˆ˜ í˜¸ì¶œ
+                case ItemData.ItemType.Tower:
+                    if (itemId == 5)
+                    {
+                        TowerDamageUp();
+                    }
+                    else
+                    {
+                        TowerRateUp();
+                    }
                     break;
             }
         }
 
-        // Àå°© ÀåºñÀÇ È¿°ú¸¦ Àû¿ëÇÏ´Â ÇÔ¼ö (¹«±âÀÇ °ø°İ ¼Óµµ Áõ°¡)
+        private void TowerDamageUp()
+        {
+            // í˜„ì¬ ë§µì—ìˆëŠ” ëª¨ë“  íƒ€ì›Œë“¤ì„ ê°€ì ¸ì˜´
+            Tower[] towers = GameManager.instance.poolManager.GetComponentsInChildren<Tower>();
+            // ê° íƒ€ì›Œì˜ ê³µê²©ë ¥ì„ ì¥ë¹„ì˜ íš¨ê³¼ì— ë§ê²Œ ì¦ê°€
+            foreach (Tower tower in towers)
+            {
+                // íƒ€ì›Œì˜ ê³µê²©ë ¥ ì¦ê°€
+                float towerDamage = damage;
+                towerDamage += towerDamage * rate;
+                // íƒ€ì›Œì˜ ê³µê²©ë ¥ ë³€ê²½
+                tower.ChangeDamage(towerDamage);
+            }
+        }
+
+        private void TowerRateUp()
+        {
+            // í˜„ì¬ ë§µì—ìˆëŠ” ëª¨ë“  íƒ€ì›Œë“¤ì„ ê°€ì ¸ì˜´
+            Tower[] towers = GameManager.instance.poolManager.GetComponentsInChildren<Tower>();
+            // ê° íƒ€ì›Œì˜ ê³µê²© ì†ë„ë¥¼ ì¥ë¹„ì˜ íš¨ê³¼ì— ë§ê²Œ ì¦ê°€
+            foreach (Tower tower in towers)
+            {
+                float towerRate = damage;
+                towerRate *= (1f - rate);
+                tower.ChangeFireRate(towerRate);
+            }
+        }
+
+        // ì¥ê°‘ ì¥ë¹„ì˜ íš¨ê³¼ë¥¼ ì ìš©í•˜ëŠ” í•¨ìˆ˜ (ë¬´ê¸°ì˜ ê³µê²© ì†ë„ ì¦ê°€)
         void RateUp()
         {
-            // ÇÃ·¹ÀÌ¾îÀÇ ÀÚ½Ä ¿ÀºêÁ§Æ®·Î ÀÖ´Â ¸ğµç ¹«±âµéÀ» °¡Á®¿È
+            // í”Œë ˆì´ì–´ì˜ ìì‹ ì˜¤ë¸Œì íŠ¸ë¡œ ìˆëŠ” ëª¨ë“  ë¬´ê¸°ë“¤ì„ ê°€ì ¸ì˜´
             Weapon[] weapons = transform.parent.GetComponentsInChildren<Weapon>();
 
-            // °¢ ¹«±âÀÇ ¼Óµµ¸¦ Àå°©ÀÇ È¿°ú¿¡ ¸Â°Ô Áõ°¡
+            // ê° ë¬´ê¸°ì˜ ì†ë„ë¥¼ ì¥ê°‘ì˜ íš¨ê³¼ì— ë§ê²Œ ì¦ê°€
             foreach (Weapon weapon in weapons)
             {
                 switch (weapon.id)
                 {
-                    // ¹«±âÀÇ id°¡ 0ÀÏ °æ¿ì, ¼Óµµ¸¦ 150¿¡ ºñ·ÊÇÏ¿© Áõ°¡
+                    // ë¬´ê¸°ì˜ idê°€ 0ì¼ ê²½ìš°, ì†ë„ë¥¼ 150ì— ë¹„ë¡€í•˜ì—¬ ì¦ê°€
                     case 0:
                         float speed = 150 * Character.WeaponSpeed;
                         weapon.speed = 150 + (150 * rate);
                         break;
-                    // ±× ¿ÜÀÇ ¹«±âµéÀº ±âº» ¼ÓµµÀÇ ºñÀ²À» rate¿¡ ¸ÂÃç º¯°æ
+                    // ê·¸ ì™¸ì˜ ë¬´ê¸°ë“¤ì€ ê¸°ë³¸ ì†ë„ì˜ ë¹„ìœ¨ì„ rateì— ë§ì¶° ë³€ê²½
                     default:
                         speed = 0.5f * Character.WeaponRate;
                         weapon.speed = 0.5f * (1f - rate);
@@ -82,13 +126,13 @@ namespace MyVampireSurvivors
             }
         }
 
-        // ½Å¹ß ÀåºñÀÇ È¿°ú¸¦ Àû¿ëÇÏ´Â ÇÔ¼ö (ÇÃ·¹ÀÌ¾îÀÇ ÀÌµ¿ ¼Óµµ Áõ°¡)
+        // ì‹ ë°œ ì¥ë¹„ì˜ íš¨ê³¼ë¥¼ ì ìš©í•˜ëŠ” í•¨ìˆ˜ (í”Œë ˆì´ì–´ì˜ ì´ë™ ì†ë„ ì¦ê°€)
         void SpeedUp()
         {
-            // ±âº» ¼Óµµ ¼³Á¤
-            float speed = 5 * Character.Speed;
+            // ê¸°ë³¸ ì†ë„ ì„¤ì •
+            float speed = 3 * Character.Speed;
 
-            // ÇÃ·¹ÀÌ¾îÀÇ ÀÌµ¿ ¼Óµµ¸¦ ½Å¹ßÀÇ È¿°ú ºñÀ²¿¡ ¸ÂÃç Áõ°¡
+            // í”Œë ˆì´ì–´ì˜ ì´ë™ ì†ë„ë¥¼ ì‹ ë°œì˜ íš¨ê³¼ ë¹„ìœ¨ì— ë§ì¶° ì¦ê°€
             GameManager.instance.player.speed = speed + speed * rate;
         }
     }

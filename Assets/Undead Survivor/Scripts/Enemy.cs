@@ -124,7 +124,6 @@ namespace MyVampireSurvivors
             // 총알의 피해를 받아 체력 감소
             float damage = collision.GetComponent<Bullet>().damage;
 
-            Debug.Log("Damage = " + damage);
             health.TakeDamage(damage);
         }
 

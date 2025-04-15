@@ -43,14 +43,13 @@ namespace MyVampireSurvivors
 
         public void TakeDamage(float damage)
         {
-            Debug.Log("TakeDamage = " + damage);
-
             // 총알의 피해를 받아 체력 감소
             health -= damage;
 
             // 체력이 0 이하가 되면 죽음 처리
             if (health <= 0)
             {
+                Debug.Log("Death() = " + gameObject.name);
                 // 죽음 상태로 전환
                 isLive = false;
                 OnDeath?.Invoke(); // 죽음 이벤트 호출
@@ -67,7 +66,8 @@ namespace MyVampireSurvivors
         // 적이 죽었을 때 호출되는 함수 (애니메이션 DeadEnemy에서 이벤트 호출)
         private void Dead()
         {
-            // 적의 게임 오브젝트를 비활성화
+            Debug.Log("Dead() = " + gameObject.name);
+            // 게임 오브젝트를 비활성화
             gameObject.SetActive(false);
 
         }

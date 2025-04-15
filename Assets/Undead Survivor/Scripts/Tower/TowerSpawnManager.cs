@@ -32,9 +32,8 @@ namespace MyVampireSurvivors
             GameObject itemGO = GameManager.instance.poolManager.Get(prefabId).gameObject;
             itemGO.transform.position = worldPosition; // 생성된 타워의 위치 설정
 
-
-
-
+            // 플레이어 오브젝트안에 있는 모든 기어들의 ApplyGear 메서드를 호출하여 장비 효과를 적용
+            GameManager.instance.player.BroadcastMessage("ApplyGear", SendMessageOptions.DontRequireReceiver);
         }
     }
 }

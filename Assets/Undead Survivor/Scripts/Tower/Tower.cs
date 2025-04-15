@@ -19,16 +19,38 @@ namespace MyVampireSurvivors
 
         Health health; // 체력 컴포넌트
 
+        public float maxDamage = 20f; // 폭발로 인한 데미지
+
+
         private void Awake()
         {
             animator = GetComponent<Animator>();
             health = GetComponent<Health>();
         }
 
-        void Start()
+        // 타워의 최대 감지 범위를 설정하고, 발사 주기에 따라 총알을 발사하는 메서드 호출
+        void OnEnable()
         {
             maxRange = detectionRadius;
             InvokeRepeating("FireTowerBulletIfTargeted", 0f, fireRate);
+
+            // 현재 오브젝트의 모든 자식 오브젝트를 비활성화
+            int childCount = gameObject.transform.childCount;
+
+            for (int i = 0; i < childCount; i++)
+            {
+                GameObject child = gameObject.transform.GetChild(i).gameObject;
+                child.SetActive(true);
+            }
+
+            gameObject.GetComponent<Collider2D>().enabled = true; // 충돌체 비활성화
+
+            health.OnDeath += OnTowerDestroy; // 타워가 파괴될 때 호출되는 이벤트 등록
+        }
+
+        private void OnDisable()
+        {
+            health.OnDeath -= OnTowerDestroy; // 타워가 파괴될 때 호출되는 이벤트 해제
         }
 
         void Update()
@@ -87,20 +109,58 @@ namespace MyVampireSurvivors
         {
             animator.SetTrigger("Fire"); // 애니메이션 트리거 설정
 
-
             // 타워 총알을 생성하고(오브젝트 풀링 프리팹 3번), Fire 메서드 호출
             GameObject bullet = GameManager.instance.poolManager.Get(3);
             bullet.transform.localScale = Vector3.one; // 스케일 초기화
-            bullet.GetComponent<TowerBullet>().Fire(startPoint, targetPoint);
+            bullet.GetComponent<TowerBullet>().Fire(startPoint, targetPoint, maxDamage);
+        }
+
+        public void ChangeDamage(float damage)
+        {
+            maxDamage = damage; // 타워의 최대 데미지 변경
+        }
+
+        // 타워의 발사 속도 변경
+        public void ChangeFireRate(float newFireRate)
+        {
+            // 현재 발사 속도를 변경
+            fireRate = newFireRate;
+            // InvokeRepeating을 사용하여 발사 속도 변경(Update 지양)
+            CancelInvoke("FireTowerBulletIfTargeted");
+            InvokeRepeating("FireTowerBulletIfTargeted", 0f, fireRate);
         }
 
         private void OnCollisionStay2D(Collision2D collision)
         {
-            if (!collision.gameObject.CompareTag("Enemy")) return;
+            // Enemy와 충돌시, 게임이 진행 중인지 확인
+            if (!GameManager.instance.isLive || !collision.gameObject.CompareTag("Enemy") || !health.isLive) return;
 
-
+            // 포탑의 체력을 감소시킴
+            health.TakeDamage(Time.deltaTime * 10f);
         }
 
+        private void OnTowerDestroy()
+        {
+            Debug.Log("Tower destroyed!"); // 타워 파괴 로그 출력
+            CancelInvoke("FireTowerBulletIfTargeted"); // 비활성화 시 발사 중지
+
+            // 현재 오브젝트의 모든 자식 오브젝트를 비활성화
+            int childCount = gameObject.transform.childCount;
+
+            for (int i = 0; i < childCount; i++)
+            {
+                GameObject child = gameObject.transform.GetChild(i).gameObject;
+                child.SetActive(false);
+            }
+            animator.SetBool("Destroy", true); // 파괴 애니메이션 실행
+            AnimatorStateInfo info = animator.GetCurrentAnimatorStateInfo(0);
+            Debug.Log("Is in Destroy state: " + info.IsName("Tower Destroy"));
+            Debug.Log("Normalized Time: " + info.normalizedTime);  // 진행 상태를 0~1로 표시 (0에서 안 움직이면 멈춤)
+            Debug.Log("Animator Speed: " + animator.speed);
+            Debug.Log("Clip Length: " + animator.GetCurrentAnimatorClipInfo(0)[0].clip.length);
+            gameObject.GetComponent<Collider2D>().enabled = false; // 충돌체 비활성화
+
+        }
 
         // 타겟을 감지하는 반경을 시각적으로 보여주는 Gizmos
         void OnDrawGizmosSelected()
