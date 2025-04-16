@@ -65,7 +65,6 @@ namespace MyVampireSurvivors
         // 적이 죽었을 때 호출되는 함수 (애니메이션 DeadEnemy에서 이벤트 호출)
         private void Dead()
         {
-            Debug.Log("Dead() = " + gameObject.name);
             // 게임 오브젝트를 비활성화
             gameObject.SetActive(false);
 

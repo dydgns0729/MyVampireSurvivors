@@ -69,11 +69,11 @@ namespace MyVampireSurvivors
             }
         }
 
-        //private void OnApplicationQuit()
-        //{
-        //    // 게임 종료 시 인벤토리 초기화
-        //    inventory.ClearAllItems(); // 인벤토리 초기화
-        //}
+        private void OnApplicationQuit()
+        {
+            // 게임 종료 시 인벤토리 초기화
+            inventory.ClearAllItems(); // 인벤토리 초기화
+        }
 
         // 게임 시작 로직
         public void GameStart(int id)

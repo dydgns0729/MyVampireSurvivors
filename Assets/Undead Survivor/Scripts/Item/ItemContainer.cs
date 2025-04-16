@@ -188,7 +188,6 @@ namespace MyVampireSurvivors
         // 인벤토리를 초기화하는 함수
         public void ClearAllItems()
         {
-            Debug.Log("ClearAllItems() called");
             foreach (var slot in itemSlots)
             {
                 slot.Clear(); // 모든 슬롯 초기화

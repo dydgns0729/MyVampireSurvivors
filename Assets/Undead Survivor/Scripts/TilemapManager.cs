@@ -37,7 +37,6 @@ namespace MyVampireSurvivors
             {
                 for (float y = -tilemapSize.y / 2; y <= tilemapSize.y / 2; y += tilemapSize.y)
                 {
-                    Debug.Log("index = " + index);
                     // 각 타일맵의 위치를 정사각형 형태로 배치
                     grid.transform.GetChild(index++).position = new Vector3(x, y, 0);
                 }

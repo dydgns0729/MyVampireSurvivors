@@ -118,7 +118,6 @@ namespace MyVampireSurvivors
                     break;
                 default:
                     speed = 0.5f * Character.WeaponRate;
-                    Debug.Log("Weapon.cs Init() default"); // 디버그 로그 출력
                     break;
             }
 
