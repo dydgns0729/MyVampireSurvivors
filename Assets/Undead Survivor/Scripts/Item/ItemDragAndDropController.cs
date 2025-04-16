@@ -115,22 +115,54 @@ namespace MyVampireSurvivors
         // 아이템 드롭 메서드
         private void DropItem()
         {
-            Vector3 worldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);        // 마우스 위치를 3D 월드 좌표로 변환
-            worldPosition.z = 0f;                                                               // z 값 0으로 설정 (2D 게임)
+            // 마우스 위치를 월드 좌표로 변환 (z는 2D 게임이므로 0으로 고정)
+            Vector3 worldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            worldPosition.z = 0f;
 
+            // 타워 아이템일 경우
             if (itemSlot.item.name.Contains("Tower"))
             {
-                Debug.Log("타워 아이템 드롭");
-                TowerSpawnManager.instance.SpawnTower(worldPosition, itemSlot.item.prefab); // 타워 아이템 드롭
-                itemSlot.amount--;                                                       // 슬롯의 아이템 개수 감소
-                if (itemSlot.amount <= 0) itemSlot.Clear();                             // 슬롯의 아이템 개수가 0 이하이면 슬롯 비우기
+                // 설치할 타워의 제작 레시피 가져오기
+                BuildRecipeSO recipe = GameManager.instance.recipeDatabase.GetRecipe(itemSlot.item);
+
+                // 인벤토리에 필요한 재료가 모두 있는 경우
+                if (GameManager.instance.inventory.HasMaterials(recipe))
+                {
+                    // 재료를 소비하고
+                    GameManager.instance.inventory.ConsumeMaterials(recipe);
+
+                    // 타워를 해당 위치에 설치
+                    TowerSpawnManager.instance.SpawnTower(worldPosition, itemSlot.item.prefab);
+
+                    // 드래그 중인 슬롯에서 아이템 수량 감소
+                    itemSlot.amount--;
+
+                    // 수량이 0 이하이면 슬롯 비우기
+                    if (itemSlot.amount <= 0) itemSlot.Clear();
+                }
+                else
+                {
+                    Debug.Log("재료가 부족합니다. 설치 취소!");
+
+                    // ✅ 설치 실패 시 → 다시 인벤토리에 아이템 되돌려 넣기
+                    GameManager.instance.inventory.Add(itemSlot.item, itemSlot.amount);
+
+                    // 드래그 슬롯 비우기
+                    itemSlot.Clear();
+                }
             }
             else
             {
-                ItemSpawnManager.instance.SpawnItem(GameManager.instance.player.transform.position, itemSlot.item, itemSlot.amount);  // 아이템을 월드에 드롭
-                itemSlot.Clear();                                                                   // 현재 슬롯 비우기
+                // 일반 아이템일 경우 → 플레이어 위치에 아이템을 드롭
+                ItemSpawnManager.instance.SpawnItem(GameManager.instance.player.transform.position, itemSlot.item, itemSlot.amount);
+
+                // 슬롯 비우기
+                itemSlot.Clear();
             }
-            UpdateIcon();                                                           // 아이콘 업데이트 메서드 호출
+
+            // 아이템 아이콘 갱신 (UI 업데이트)
+            UpdateIcon();
         }
+
     }
 }

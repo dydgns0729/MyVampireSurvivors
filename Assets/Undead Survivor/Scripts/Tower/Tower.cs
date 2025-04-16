@@ -141,7 +141,6 @@ namespace MyVampireSurvivors
 
         private void OnTowerDestroy()
         {
-            Debug.Log("Tower destroyed!"); // 타워 파괴 로그 출력
             CancelInvoke("FireTowerBulletIfTargeted"); // 비활성화 시 발사 중지
 
             // 현재 오브젝트의 모든 자식 오브젝트를 비활성화
@@ -153,11 +152,7 @@ namespace MyVampireSurvivors
                 child.SetActive(false);
             }
             animator.SetBool("Destroy", true); // 파괴 애니메이션 실행
-            AnimatorStateInfo info = animator.GetCurrentAnimatorStateInfo(0);
-            Debug.Log("Is in Destroy state: " + info.IsName("Tower Destroy"));
-            Debug.Log("Normalized Time: " + info.normalizedTime);  // 진행 상태를 0~1로 표시 (0에서 안 움직이면 멈춤)
-            Debug.Log("Animator Speed: " + animator.speed);
-            Debug.Log("Clip Length: " + animator.GetCurrentAnimatorClipInfo(0)[0].clip.length);
+
             gameObject.GetComponent<Collider2D>().enabled = false; // 충돌체 비활성화
 
         }

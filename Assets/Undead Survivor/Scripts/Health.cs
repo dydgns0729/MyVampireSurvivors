@@ -49,7 +49,6 @@ namespace MyVampireSurvivors
             // 체력이 0 이하가 되면 죽음 처리
             if (health <= 0)
             {
-                Debug.Log("Death() = " + gameObject.name);
                 // 죽음 상태로 전환
                 isLive = false;
                 OnDeath?.Invoke(); // 죽음 이벤트 호출

@@ -9,13 +9,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 70e2bd23d2a412341935a2dcc4e0727a, type: 3}
-  m_Name: IDT_Enemy0
+  m_Script: {fileID: 11500000, guid: 29675ed75294c7c439be0a18973f2a33, type: 3}
+  m_Name: TowerBuildRecipe
   m_EditorClassIdentifier: 
-  items:
-  - item: {fileID: 0}
-    weight: 280
+  result: {fileID: 11400000, guid: 37613c065031490408c90c2a168e4d71, type: 2}
+  materials:
   - item: {fileID: 11400000, guid: eb284ae801d74c845b1eddc397f40616, type: 2}
-    weight: 10
+    amount: 10
   - item: {fileID: 11400000, guid: 6ceaffe4baa34e24c9fdc8dbd3d944ff, type: 2}
-    weight: 10
+    amount: 10

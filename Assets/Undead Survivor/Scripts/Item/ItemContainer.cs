@@ -128,5 +128,71 @@ namespace MyVampireSurvivors
             return HasEmptySlot();
         }
 
+        // 주어진 제작 레시피에 필요한 모든 재료가 인벤토리에 충분한지 확인하는 함수
+        public bool HasMaterials(BuildRecipeSO recipe)
+        {
+            // 레시피에 정의된 모든 재료를 하나씩 확인
+            foreach (var ing in recipe.materials)
+            {
+                int totalAmount = 0;
+
+                // 인벤토리의 모든 슬롯을 순회하여, 해당 재료 아이템이 들어 있는 수량을 합산
+                foreach (var slot in itemSlots)
+                {
+                    if (slot.item == ing.item)
+                        totalAmount += slot.amount;
+                }
+
+                // 필요한 수량보다 적으면 false 반환 (재료 부족)
+                if (totalAmount < ing.amount)
+                    return false;
+            }
+
+            // 모든 재료가 충분히 있으면 true 반환
+            return true;
+        }
+
+        // 주어진 제작 레시피에 따라 인벤토리에서 실제로 재료를 차감하는 함수
+        public void ConsumeMaterials(BuildRecipeSO recipe)
+        {
+            // 레시피의 각 재료마다 차감 작업 수행
+            foreach (var ing in recipe.materials)
+            {
+                int remaining = ing.amount; // 아직 차감해야 할 남은 수량
+
+                // 인벤토리 슬롯을 순회하면서 해당 아이템을 가진 슬롯에서 차감
+                foreach (var slot in itemSlots)
+                {
+                    if (slot.item == ing.item && remaining > 0)
+                    {
+                        if (slot.amount > remaining)
+                        {
+                            // 현재 슬롯의 수량이 더 많으면 일부만 차감
+                            slot.amount -= remaining;
+                            remaining = 0;
+                        }
+                        else
+                        {
+                            // 현재 슬롯 수량이 부족하거나 딱 맞으면 전부 차감하고 슬롯 비우기
+                            remaining -= slot.amount;
+                            slot.Clear();
+                        }
+                    }
+                }
+            }
+
+            // 인벤토리 UI 등 갱신을 위해 델리게이트 호출
+            inventoryChanged?.Invoke();
+        }
+
+        // 인벤토리를 초기화하는 함수
+        public void ClearAllItems()
+        {
+            Debug.Log("ClearAllItems() called");
+            foreach (var slot in itemSlots)
+            {
+                slot.Clear(); // 모든 슬롯 초기화
+            }
+        }
     }
 }
