@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace MyVampireSurvivors
@@ -87,6 +88,17 @@ namespace MyVampireSurvivors
                 StartCoroutine(NoticeRoutine());
 
             }
+        }
+
+        public void NotEnoughMaterial()
+        {
+            for (int i = 0; i < uiNotice.transform.childCount; i++)
+            {
+                uiNotice.transform.GetChild(i).gameObject.SetActive(false);
+            }
+
+            uiNotice.transform.GetChild(2).gameObject.SetActive(true);
+            StartCoroutine(NoticeRoutine());
         }
 
         IEnumerator NoticeRoutine()

@@ -12,6 +12,10 @@ namespace MyVampireSurvivors
         private RectTransform iconTransform;            // 아이콘의 RectTransform (UI 위치 및 크기)
         private Image itemIconImage;                    // 아이콘의 이미지 컴포넌트
         public bool isDraging = false;                  // 드래그 중인지 여부를 나타내는 플래그
+
+        public AchiveManager achiveManager; // AchiveManager 참조 (아이템 드래그 시 Notice창 관련 처리)
+
+        private ItemSlot originSlot; // 드래그 시작 슬롯
         #endregion
 
         private void Start()
@@ -39,6 +43,9 @@ namespace MyVampireSurvivors
             if (itemSlot.item == null)
             {
                 itemSlot.Copy(clickedSlot);        // 클릭한 슬롯의 아이템 정보를 복사
+
+                //originSlot = clickedSlot;       // 시작 슬롯 저장
+
                 clickedSlot.Clear();               // 클릭한 슬롯을 비움
             }
             else // 현재 슬롯에 아이템이 있을 경우
@@ -68,21 +75,42 @@ namespace MyVampireSurvivors
                         }
                     }
                 }
-                else  // 아이템이 다른 경우 → 위치 교환
+                else  // 아이템이 다른 경우 → 두 슬롯의 아이템을 서로 교환
                 {
-                    SetItem(clickedSlot);
+                    // 💡 추가 조건: 제자리에 놓았을 경우 → 그냥 마우스 비우고 끝
+                    if (originSlot == clickedSlot)
+                    {
+                        originSlot.Set(itemSlot.item, itemSlot.amount); // 원래 슬롯에 아이템 복사
+                        itemSlot.Clear();
+                    }
+                    else
+                    {
+                        SwapItemSlots(clickedSlot); // 서로 다른 슬롯이면 자리 교환
+                    }
                 }
             }
 
             UpdateIcon();  // 아이콘 업데이트
         }
 
-        private void SetItem(ItemSlot clickedSlot)
+        // 두 슬롯의 아이템과 수량을 교환하는 함수
+        private void SwapItemSlots(ItemSlot targetSlot)
         {
-            ItemSO tempItem = clickedSlot.item;  // 클릭한 슬롯의 아이템을 임시 변수에 저장
-            int tempCount = clickedSlot.amount; // 클릭한 슬롯의 아이템 개수를 임시 변수에 저장
-            clickedSlot.Copy(itemSlot);        // 현재 슬롯의 아이템 정보를 클릭한 슬롯으로 복사
-            itemSlot.Set(tempItem, tempCount); // 임시 변수의 아이템 정보를 현재 슬롯에 설정
+            // targetSlot은 드래그해서 놓은 슬롯 (예: 돌)
+            // originSlot은 나무가 있던 원래 슬롯
+            // itemSlot은 마우스로 들고 있는 아이템 (나무)
+
+            ItemSO targetItem = targetSlot.item;
+            int targetAmount = targetSlot.amount;
+
+            // 1. targetSlot ← 나무
+            targetSlot.Set(itemSlot.item, itemSlot.amount);
+
+            // 2. originSlot ← 돌
+            originSlot.Set(targetItem, targetAmount);
+
+            // 3. 마우스 슬롯 비우기
+            itemSlot.Clear();
         }
 
         // 아이콘 업데이트 메서드
@@ -95,6 +123,9 @@ namespace MyVampireSurvivors
         public void OnDragStart(ItemSlot draggedSlot)
         {
             isDraging = true;     // 드래그 중 플래그 설정
+
+            originSlot = draggedSlot; // 드래그 시작 슬롯 저장
+
             ItemMove(draggedSlot); // 드래그하는 슬롯 클릭 처리
         }
 
@@ -142,7 +173,7 @@ namespace MyVampireSurvivors
                 }
                 else
                 {
-                    Debug.Log("재료가 부족합니다. 설치 취소!");
+                    achiveManager.NotEnoughMaterial(); // 재료 부족 알림
 
                     // ✅ 설치 실패 시 → 다시 인벤토리에 아이템 되돌려 넣기
                     GameManager.instance.inventory.Add(itemSlot.item, itemSlot.amount);

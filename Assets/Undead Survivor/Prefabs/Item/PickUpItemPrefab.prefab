@@ -101,7 +101,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 5
-  pickUpDistance: 1.5
+  pickUpDistance: 2.5
   timeToLive: 10
   itemSO: {fileID: 0}
   itemAmount: 1
+  isBouncing: 0

@@ -61,12 +61,6 @@ namespace MyVampireSurvivors
                 gameTime = maxGameTime;
                 GameVictory();
             }
-
-            // 테스트용: V 키를 누르면 경험치 거의 가득 채우기
-            if (Input.GetKeyDown(KeyCode.V))
-            {
-                exp = (nextExp[Mathf.Min(level, nextExp.Length - 1)]) - 1;
-            }
         }
 
         private void OnApplicationQuit()

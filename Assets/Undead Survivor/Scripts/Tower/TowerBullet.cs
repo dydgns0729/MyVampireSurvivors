@@ -90,9 +90,6 @@ namespace MyVampireSurvivors
 
             // 총알도 비활성화하여 더 이상 보이지 않도록 처리
             gameObject.SetActive(false);
-
-            // 폭발 종료 로그 출력
-            Debug.Log("Explosion end");
         }
 
         // 폭발 범위 내 적들에게 데미지를 적용하는 함수

@@ -22,7 +22,7 @@ namespace MyVampireSurvivors
 
         public static float Damage
         {
-            get { return GameManager.instance.playerId == 2 ? 0.9f : 1f; }
+            get { return GameManager.instance.playerId == 2 ? 1.2f : 1f; }
         }
 
         public static int Count

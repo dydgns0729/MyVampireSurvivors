@@ -55,8 +55,15 @@ namespace MyVampireSurvivors
                 // 근접 무기나 원거리 무기일 경우
                 case ItemData.ItemType.Melee:
                 case ItemData.ItemType.Range:
-                    // 
-                    textDesc.text = string.Format(data.itemDesc, data.damages[level] * 100, data.counts[level]);
+                    if (level == 0)
+                    {
+                        textDesc.text = "무기 추가";
+                    }
+                    else
+                    {
+                        // 아이템의 설명을 설정
+                        textDesc.text = string.Format(data.itemDesc, data.damages[level] * 100, data.counts[level]);
+                    }
                     break;
                 case ItemData.ItemType.Glove:
                 case ItemData.ItemType.Shoe:

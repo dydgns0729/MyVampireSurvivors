@@ -179,7 +179,7 @@ MonoBehaviour:
   fireRate: 2
   minRange: 3
   maxRange: 0
-  maxDamage: 20
+  maxDamage: 30
 --- !u!114 &7630438729120145735
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -193,7 +193,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   health: 0
-  maxHealth: 200
+  maxHealth: 400
   isLive: 0
 --- !u!1 &407641366859838321
 GameObject:

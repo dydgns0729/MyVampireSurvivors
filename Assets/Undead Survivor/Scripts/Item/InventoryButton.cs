@@ -54,7 +54,6 @@ namespace MyVampireSurvivors
         // 드래그 시작 이벤트 처리 메서드
         public void OnBeginDrag(PointerEventData eventData)
         {
-            //Debug.Log("드래그 시작" + GetItem.name);
             if (GetItem == null && GameManager.instance.dragAndDropController.itemSlot.item == null) return; // 아이템이 없으면 리턴
             #region 250328 인벤토리 별로 드래그 관리
             // 부모 오브젝트에서 ItemPanel 컴포넌트를 가져옵니다.
@@ -89,7 +88,6 @@ namespace MyVampireSurvivors
         // 드롭 이벤트 처리 메서드
         public void OnDrop(PointerEventData eventData)
         {
-            //Debug.Log("드래그 끝 아이템 드랍" + GetItem.name);
             if (GetItem == null && GameManager.instance.dragAndDropController.itemSlot.item == null) return; // 아이템이 없으면 리턴
             #region 250328 인벤토리 별로 드래그 관리
             // 부모 오브젝트에서 ItemPanel 컴포넌트를 가져옵니다.
