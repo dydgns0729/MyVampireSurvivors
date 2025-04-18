@@ -70,6 +70,9 @@ namespace MyVampireSurvivors
         // 이 함수는 총알이 목표 지점에 도달한 후 폭발 효과를 발생시키고, 총알을 비활성화합니다.
         private IEnumerator Explosion()
         {
+            //사운드 재생
+            AudioManager.instance.PlaySFX(AudioManager.SFX.TowerExplosion);
+
             // 총알 크기를 0으로 설정하여 점차적으로 사라지는 효과를 줌
             gameObject.transform.localScale = Vector3.zero;
 

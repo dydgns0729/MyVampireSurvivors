@@ -29,50 +29,62 @@ namespace MyVampireSurvivors
         public Slider sfxSlider;
         #endregion
 
-        public enum SFX { Dead, Hit, LevelUp = 3, Lose, Melee, Range = 7, Select, Win }
+        public enum SFX
+        {
+            Dead,
+            Hit,
+            LevelUp = 3,
+            Lose,
+            Melee,
+            Range = 7,
+            Select,
+            Win,
+            TowerFire,
+            TowerExplosion
+        }
 
         private void Awake()
         {
-            instance = this; // ½Ì±ÛÅæ ÀÎ½ºÅÏ½º ¼³Á¤
+            instance = this; // ì‹±ê¸€í†¤ ì¸ìŠ¤í„´ìŠ¤ ì„¤ì •
 
-            bgmSlider.onValueChanged.AddListener((value) => SetVolume(value, "BGM")); // BGM ½½¶óÀÌ´õ °ª º¯°æ ½Ã º¼·ı ¼³Á¤
-            sfxSlider.onValueChanged.AddListener((value) => SetVolume(value, "SFX")); // SFX ½½¶óÀÌ´õ °ª º¯°æ ½Ã º¼·ı ¼³Á¤
+            bgmSlider.onValueChanged.AddListener((value) => SetVolume(value, "BGM")); // BGM ìŠ¬ë¼ì´ë” ê°’ ë³€ê²½ ì‹œ ë³¼ë¥¨ ì„¤ì •
+            sfxSlider.onValueChanged.AddListener((value) => SetVolume(value, "SFX")); // SFX ìŠ¬ë¼ì´ë” ê°’ ë³€ê²½ ì‹œ ë³¼ë¥¨ ì„¤ì •
 
             Init();
         }
 
         private void Start()
         {
-            //Init()¿¡¼­ ÃÊ±âÈ­½Ã ¸ğÁ¾ÀÇ ÀÌÀ¯·Î °ªÀ» ¹Í¼­¿¡ Àû¿ëµÇÁö ¾ÊÀ½
-            bgmSlider.value = GetVolume("BGM"); // BGM ½½¶óÀÌ´õ ÃÊ±âÈ­
-            sfxSlider.value = GetVolume("SFX"); // SFX ½½¶óÀÌ´õ ÃÊ±âÈ­
+            //Init()ì—ì„œ ì´ˆê¸°í™”ì‹œ ëª¨ì¢…ì˜ ì´ìœ ë¡œ ê°’ì„ ë¯¹ì„œì— ì ìš©ë˜ì§€ ì•ŠìŒ
+            bgmSlider.value = GetVolume("BGM"); // BGM ìŠ¬ë¼ì´ë” ì´ˆê¸°í™”
+            sfxSlider.value = GetVolume("SFX"); // SFX ìŠ¬ë¼ì´ë” ì´ˆê¸°í™”
         }
 
         private void Init()
         {
-            //¹è°æÀ½ ÇÃ·¹ÀÌ¾î ÃÊ±âÈ­
+            //ë°°ê²½ìŒ í”Œë ˆì´ì–´ ì´ˆê¸°í™”
             GameObject bgmObject = new GameObject("BGMPlayer");
-            bgmObject.transform.SetParent(transform); // AudioManagerÀÇ ÀÚ½ÄÀ¸·Î ¼³Á¤
-            bgmPlayer = bgmObject.AddComponent<AudioSource>(); // AudioSource ÄÄÆ÷³ÍÆ® Ãß°¡   
-            bgmPlayer.playOnAwake = false; // ÀÚµ¿ Àç»ı ¾È ÇÔ
-            bgmPlayer.loop = true; // ¹İº¹ Àç»ı
-            bgmPlayer.volume = bgmVolumn; // º¼·ı ¼³Á¤
-            bgmPlayer.clip = bgmClip; // BGM Å¬¸³ ¼³Á¤
-            bgmEffect = Camera.main.GetComponent<AudioHighPassFilter>(); // Ä«¸Ş¶óÀÇ AudioHighPassFilter ÄÄÆ÷³ÍÆ® °¡Á®¿À±â
+            bgmObject.transform.SetParent(transform); // AudioManagerì˜ ìì‹ìœ¼ë¡œ ì„¤ì •
+            bgmPlayer = bgmObject.AddComponent<AudioSource>(); // AudioSource ì»´í¬ë„ŒíŠ¸ ì¶”ê°€   
+            bgmPlayer.playOnAwake = false; // ìë™ ì¬ìƒ ì•ˆ í•¨
+            bgmPlayer.loop = true; // ë°˜ë³µ ì¬ìƒ
+            bgmPlayer.volume = bgmVolumn; // ë³¼ë¥¨ ì„¤ì •
+            bgmPlayer.clip = bgmClip; // BGM í´ë¦½ ì„¤ì •
+            bgmEffect = Camera.main.GetComponent<AudioHighPassFilter>(); // ì¹´ë©”ë¼ì˜ AudioHighPassFilter ì»´í¬ë„ŒíŠ¸ ê°€ì ¸ì˜¤ê¸°
 
-            bgmPlayer.outputAudioMixerGroup = audioMixer.FindMatchingGroups("BGM")[0]; // BGM ¹Í¼­ ±×·ì ¼³Á¤
-            //È¿°úÀ½ ÇÃ·¹ÀÌ¾î ÃÊ±âÈ­
+            bgmPlayer.outputAudioMixerGroup = audioMixer.FindMatchingGroups("BGM")[0]; // BGM ë¯¹ì„œ ê·¸ë£¹ ì„¤ì •
+            //íš¨ê³¼ìŒ í”Œë ˆì´ì–´ ì´ˆê¸°í™”
             GameObject sfxObject = new GameObject("SFXPlayer");
-            sfxObject.transform.SetParent(transform); // AudioManagerÀÇ ÀÚ½ÄÀ¸·Î ¼³Á¤
-            sfxPlayers = new AudioSource[channels]; // Ã¤³Î ¼ö¸¸Å­ AudioSource ¹è¿­ »ı¼º 
+            sfxObject.transform.SetParent(transform); // AudioManagerì˜ ìì‹ìœ¼ë¡œ ì„¤ì •
+            sfxPlayers = new AudioSource[channels]; // ì±„ë„ ìˆ˜ë§Œí¼ AudioSource ë°°ì—´ ìƒì„± 
             for (int i = 0; i < sfxPlayers.Length; i++)
             {
-                sfxPlayers[i] = sfxObject.AddComponent<AudioSource>(); // AudioSource ÄÄÆ÷³ÍÆ® Ãß°¡
-                sfxPlayers[i].playOnAwake = false; // ÀÚµ¿ Àç»ı ¾È ÇÔ
-                sfxPlayers[i].loop = false; // ¹İº¹ Àç»ı ¾È ÇÔ
-                sfxPlayers[i].volume = sfxVolumn; // º¼·ı ¼³Á¤
-                sfxPlayers[i].bypassEffects = true; // SFX¿¡´Â »ç¿îµå ÀÌÆåÆ®¸¦ Àû¿ëÇÏÁö ¾ÊÀ½
-                sfxPlayers[i].outputAudioMixerGroup = audioMixer.FindMatchingGroups("SFX")[0]; // BGM ¹Í¼­ ±×·ì ¼³Á¤
+                sfxPlayers[i] = sfxObject.AddComponent<AudioSource>(); // AudioSource ì»´í¬ë„ŒíŠ¸ ì¶”ê°€
+                sfxPlayers[i].playOnAwake = false; // ìë™ ì¬ìƒ ì•ˆ í•¨
+                sfxPlayers[i].loop = false; // ë°˜ë³µ ì¬ìƒ ì•ˆ í•¨
+                sfxPlayers[i].volume = sfxVolumn; // ë³¼ë¥¨ ì„¤ì •
+                sfxPlayers[i].bypassEffects = true; // SFXì—ëŠ” ì‚¬ìš´ë“œ ì´í™íŠ¸ë¥¼ ì ìš©í•˜ì§€ ì•ŠìŒ
+                sfxPlayers[i].outputAudioMixerGroup = audioMixer.FindMatchingGroups("SFX")[0]; // BGM ë¯¹ì„œ ê·¸ë£¹ ì„¤ì •
             }
         }
 
@@ -80,45 +92,45 @@ namespace MyVampireSurvivors
         {
             if (isPlay)
             {
-                bgmPlayer.Play(); // BGM Àç»ı
+                bgmPlayer.Play(); // BGM ì¬ìƒ
             }
             else
             {
-                bgmPlayer.Stop(); // BGM Á¤Áö
+                bgmPlayer.Stop(); // BGM ì •ì§€
             }
         }
         public void EffectBGM(bool isPlay)
         {
-            bgmEffect.enabled = isPlay; // BGM È¿°úÀ½ È°¼ºÈ­
+            bgmEffect.enabled = isPlay; // BGM íš¨ê³¼ìŒ í™œì„±í™”
         }
 
         public void PlaySFX(SFX sfx)
         {
             for (int i = 0; i < sfxPlayers.Length; i++)
             {
-                int loopIndex = (i + channelIndex) % sfxPlayers.Length; // ÇöÀç Ã¤³Î ÀÎµ¦½º °è»ê
+                int loopIndex = (i + channelIndex) % sfxPlayers.Length; // í˜„ì¬ ì±„ë„ ì¸ë±ìŠ¤ ê³„ì‚°
 
-                if (sfxPlayers[loopIndex].isPlaying) // ÇöÀç Ã¤³ÎÀÌ »ç¿ë ÁßÀÌÁö ¾ÊÀ¸¸é
+                if (sfxPlayers[loopIndex].isPlaying) // í˜„ì¬ ì±„ë„ì´ ì‚¬ìš© ì¤‘ì´ì§€ ì•Šìœ¼ë©´
                 {
-                    continue; // ´ÙÀ½ Ã¤³Î·Î ÀÌµ¿
+                    continue; // ë‹¤ìŒ ì±„ë„ë¡œ ì´ë™
                 }
                 int ranIndex = 0;
                 switch (sfx)
                 {
                     case SFX.Hit:
                     case SFX.Melee:
-                        ranIndex = UnityEngine.Random.Range(0, 2); // 0 ¶Ç´Â 1
-                        sfx += ranIndex; // ·£´ıÀ¸·Î Hit ¶Ç´Â Melee ¼±ÅÃ
+                        ranIndex = UnityEngine.Random.Range(0, 2); // 0 ë˜ëŠ” 1
+                        sfx += ranIndex; // ëœë¤ìœ¼ë¡œ Hit ë˜ëŠ” Melee ì„ íƒ
                         break;
                     default:
                         break;
                 }
 
-                channelIndex = loopIndex; // ÇöÀç Ã¤³Î ÀÎµ¦½º ¾÷µ¥ÀÌÆ®
+                channelIndex = loopIndex; // í˜„ì¬ ì±„ë„ ì¸ë±ìŠ¤ ì—…ë°ì´íŠ¸
 
-                sfxPlayers[loopIndex].clip = sfxClips[(int)sfx]; // ¼±ÅÃÇÑ SFX Å¬¸³ ¼³Á¤
-                sfxPlayers[loopIndex].Play(); // SFX Àç»ı
-                break; // ·çÇÁ Á¾·á
+                sfxPlayers[loopIndex].clip = sfxClips[(int)sfx]; // ì„ íƒí•œ SFX í´ë¦½ ì„¤ì •
+                sfxPlayers[loopIndex].Play(); // SFX ì¬ìƒ
+                break; // ë£¨í”„ ì¢…ë£Œ
             }
         }
 
@@ -126,7 +138,7 @@ namespace MyVampireSurvivors
         {
             if (!PlayerPrefs.HasKey(parameterName))
             {
-                return 1f; // ±âº» º¼·ı °ª
+                return 1f; // ê¸°ë³¸ ë³¼ë¥¨ ê°’
             }
             float valueInDb = PlayerPrefs.GetFloat(parameterName);
             return Mathf.Pow(10f, valueInDb / 20.0f);
@@ -140,9 +152,9 @@ namespace MyVampireSurvivors
 
             float valueInDb = Mathf.Log10(value) * 20;
 
-            audioMixer.SetFloat(parameterName, valueInDb); // ¿Àµğ¿À ¹Í¼­¿¡ º¼·ı ¼³Á¤
+            audioMixer.SetFloat(parameterName, valueInDb); // ì˜¤ë””ì˜¤ ë¯¹ì„œì— ë³¼ë¥¨ ì„¤ì •
 
-            PlayerPrefs.SetFloat(parameterName, valueInDb); // ÇÃ·¹ÀÌ¾î ÇÁ·¹ÆÛ½º¿¡ ÀúÀå
+            PlayerPrefs.SetFloat(parameterName, valueInDb); // í”Œë ˆì´ì–´ í”„ë ˆí¼ìŠ¤ì— ì €ì¥
         }
     }
 }

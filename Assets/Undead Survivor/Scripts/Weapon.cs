@@ -155,6 +155,8 @@ namespace MyVampireSurvivors
                 // 총알 위치 초기화 (무기 위치에서 시작하도록 설정)
                 bullet.localPosition = Vector3.zero;
                 bullet.localRotation = Quaternion.identity;
+                // 미니맵에 표시되지 않도록 레이어를 플레이어로 설정
+                bullet.gameObject.layer = LayerMask.NameToLayer("Player"); 
 
                 // 총알의 회전 각도를 계산하여 원형으로 배치
                 Vector3 rotVec = Vector3.forward * 360 * i / count;

@@ -93,6 +93,9 @@ namespace MyVampireSurvivors
                         // 새로운 GameObject를 생성하여 Weapon 컴포넌트를 추가
                         GameObject newWeapon = new GameObject();
                         weapon = newWeapon.AddComponent<Weapon>();
+                        // 미니맵에 표시되지 않도록 레이어를 플레이어로 설정
+                        weapon.gameObject.layer = LayerMask.NameToLayer("Player");
+
                         weapon.Init(data);
                     }
                     else

@@ -107,6 +107,9 @@ namespace MyVampireSurvivors
         // 타워 총알 발사
         private void FireTowerBullet(Vector3 startPoint, Vector3 targetPoint)
         {
+            //타워 발사 사운드 추가
+            AudioManager.instance.PlaySFX(AudioManager.SFX.TowerFire);
+
             animator.SetTrigger("Fire"); // 애니메이션 트리거 설정
 
             // 타워 총알을 생성하고(오브젝트 풀링 프리팹 3번), Fire 메서드 호출
@@ -141,6 +144,9 @@ namespace MyVampireSurvivors
 
         private void OnTowerDestroy()
         {
+            //타워 파괴 사운드 추가
+            AudioManager.instance.PlaySFX(AudioManager.SFX.TowerExplosion);
+
             CancelInvoke("FireTowerBulletIfTargeted"); // 비활성화 시 발사 중지
 
             // 현재 오브젝트의 모든 자식 오브젝트를 비활성화

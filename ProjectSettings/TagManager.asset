@@ -19,7 +19,7 @@ TagManager:
   - Bullet
   - Weapon
   - Player
-  - 
+  - MinimapObj
   - 
   - 
   - 
@@ -53,6 +53,9 @@ TagManager:
     locked: 0
   - name: Tower
     uniqueID: 3088969783
+    locked: 0
+  - name: Minimap
+    uniqueID: 562848135
     locked: 0
   m_RenderingLayers:
   - Default
