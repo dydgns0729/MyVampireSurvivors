@@ -8,6 +8,7 @@ TagManager:
   - Area
   - Enemy
   - Bullet
+  - Tower
   layers:
   - Default
   - TransparentFX
@@ -20,7 +21,7 @@ TagManager:
   - Weapon
   - Player
   - MinimapObj
-  - 
+  - Tower
   - 
   - 
   - 

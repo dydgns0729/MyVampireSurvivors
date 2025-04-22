@@ -39,6 +39,9 @@ namespace MyVampireSurvivors
 
         [Header("# Recipe")]
         public RecipeDatabase recipeDatabase; // 조합법 데이터베이스
+
+        [Header("# AchiveManager")]
+        public AchiveManager achiveManager; // 업적 관리 매니저
         #endregion
 
         // 게임 시작 시 호출되는 함수

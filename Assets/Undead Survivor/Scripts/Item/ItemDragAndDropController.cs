@@ -13,8 +13,6 @@ namespace MyVampireSurvivors
         private Image itemIconImage;                    // 아이콘의 이미지 컴포넌트
         public bool isDraging = false;                  // 드래그 중인지 여부를 나타내는 플래그
 
-        public AchiveManager achiveManager; // AchiveManager 참조 (아이템 드래그 시 Notice창 관련 처리)
-
         private ItemSlot originSlot; // 드래그 시작 슬롯
         #endregion
 
@@ -159,21 +157,32 @@ namespace MyVampireSurvivors
                 // 인벤토리에 필요한 재료가 모두 있는 경우
                 if (GameManager.instance.inventory.HasMaterials(recipe))
                 {
-                    // 재료를 소비하고
-                    GameManager.instance.inventory.ConsumeMaterials(recipe);
+                    // 1. 타워를 해당 위치에 설치 시도 (겹침 검사 포함됨)
+                    bool isSuccess = TowerSpawnManager.instance.SpawnTower(worldPosition, itemSlot.item.prefab);
 
-                    // 타워를 해당 위치에 설치
-                    TowerSpawnManager.instance.SpawnTower(worldPosition, itemSlot.item.prefab);
+                    if (isSuccess)
+                    {
+                        // 2. 설치 성공 시 → 재료 소비
+                        GameManager.instance.inventory.ConsumeMaterials(recipe);
 
-                    // 드래그 중인 슬롯에서 아이템 수량 감소
-                    itemSlot.amount--;
+                        // 3. 드래그 중인 슬롯에서 아이템 수량 감소
+                        itemSlot.amount--;
 
-                    // 수량이 0 이하이면 슬롯 비우기
-                    if (itemSlot.amount <= 0) itemSlot.Clear();
+                        // 수량이 0 이하이면 슬롯 비우기
+                        if (itemSlot.amount <= 0)
+                            itemSlot.Clear();
+                    }
+                    else
+                    {
+                        // 4. 설치 실패 시 → 다시 인벤토리에 아이템 되돌려 넣기
+                        GameManager.instance.inventory.Add(itemSlot.item, itemSlot.amount);
+                        itemSlot.Clear();
+                    }
                 }
                 else
                 {
-                    achiveManager.NotEnoughMaterial(); // 재료 부족 알림
+                    // 재료 부족 알림
+                    GameManager.instance.achiveManager.NotEnoughMaterial("나무와 돌이 10개씩 필요합니다!");
 
                     // ✅ 설치 실패 시 → 다시 인벤토리에 아이템 되돌려 넣기
                     GameManager.instance.inventory.Add(itemSlot.item, itemSlot.amount);
@@ -194,6 +203,7 @@ namespace MyVampireSurvivors
             // 아이템 아이콘 갱신 (UI 업데이트)
             UpdateIcon();
         }
+
 
     }
 }

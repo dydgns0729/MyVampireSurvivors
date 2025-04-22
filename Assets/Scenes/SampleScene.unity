@@ -4491,7 +4491,7 @@ Camera:
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 1015
+    m_Bits: 3063
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -16167,6 +16167,7 @@ MonoBehaviour:
   inventory: {fileID: 11400000, guid: 10c7a7556358e374bbbca3e99ea5c392, type: 2}
   dragAndDropController: {fileID: 1723048218}
   recipeDatabase: {fileID: 1723048221}
+  achiveManager: {fileID: 1867707454}
 --- !u!4 &1723048217
 Transform:
   m_ObjectHideFlags: 0
@@ -16199,7 +16200,6 @@ MonoBehaviour:
     item: {fileID: 0}
     amount: 0
   isDraging: 0
-  achiveManager: {fileID: 1867707454}
 --- !u!114 &1723048219
 MonoBehaviour:
   m_ObjectHideFlags: 0

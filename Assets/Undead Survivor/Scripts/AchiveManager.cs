@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -90,14 +91,17 @@ namespace MyVampireSurvivors
             }
         }
 
-        public void NotEnoughMaterial()
+        public void NotEnoughMaterial(string text)
         {
+            Debug.Log("uinotice = " + uiNotice.transform.childCount);
             for (int i = 0; i < uiNotice.transform.childCount; i++)
             {
-                uiNotice.transform.GetChild(i).gameObject.SetActive(false);
+                Debug.Log(i);
+                uiNotice.transform.GetChild(i).gameObject.SetActive(i == uiNotice.transform.childCount - 1);
             }
+            uiNotice.transform.GetChild(2).gameObject.GetComponentInChildren<TextMeshProUGUI>().text = text;
 
-            uiNotice.transform.GetChild(2).gameObject.SetActive(true);
+
             StartCoroutine(NoticeRoutine());
         }
 
