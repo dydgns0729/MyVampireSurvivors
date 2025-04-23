@@ -25,7 +25,6 @@ namespace MyVampireSurvivors
             {
                 if (col.CompareTag("Tower"))
                 {
-                    Debug.Log("겹치는 타워가 있어 설치할 수 없습니다.");
                     GameManager.instance.achiveManager.NotEnoughMaterial("다른 타워와 너무 가깝습니다"); // 선택적으로 경고 UI 출력
                     return false;
                 }

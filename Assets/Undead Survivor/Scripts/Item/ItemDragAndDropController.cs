@@ -182,7 +182,7 @@ namespace MyVampireSurvivors
                 else
                 {
                     // 재료 부족 알림
-                    GameManager.instance.achiveManager.NotEnoughMaterial("나무와 돌이 10개씩 필요합니다!");
+                    GameManager.instance.achiveManager.NotEnoughMaterial("나무와 돌이 5개씩 필요합니다!");
 
                     // ✅ 설치 실패 시 → 다시 인벤토리에 아이템 되돌려 넣기
                     GameManager.instance.inventory.Add(itemSlot.item, itemSlot.amount);

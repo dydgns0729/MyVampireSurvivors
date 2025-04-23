@@ -10032,7 +10032,7 @@ MonoBehaviour:
       m_Calls: []
   m_text: "\uC801 \uCC98\uCE58\uC2DC \uC544\uC774\uD15C\uC744\n\uD68D\uB4DD\uD558\uC5EC
     \uD3EC\uD0D1\uC744 \uC124\uCE58\uD560 \uC218 \uC788\uC2B5\uB2C8\uB2E4!\n(\uB098\uBB34
-    10\uAC1C \uB3CC 10\uAC1C \uD544\uC694)"
+    5\uAC1C \uB3CC 5\uAC1C \uD544\uC694)"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 9fa6b4110041b3640824657d343358c2, type: 2}
   m_sharedMaterial: {fileID: 2100000, guid: 6cfb43339f2014b4cac959cf1fb773b0, type: 2}
